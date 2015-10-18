@@ -2,6 +2,7 @@ package com.wilson.client;
 
 import java.net.URI;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -10,8 +11,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wilson.client.dota.DotaGetMatchDetailsRequest;
-import com.wilson.client.dota.response.MatchDetail;
+import com.wilson.client.user.SteamRequest;
+import com.wilson.client.user.response.SteamUser;
 
 public class SteamApi {
 
@@ -19,14 +20,8 @@ public class SteamApi {
 	private static String apiUrl = "api.steampowered.com";
 	private static String apiProtocol = "http";
 	private HttpClient client;
+	private HttpEntity entity;
 
-	public static void main(String args[]) {
-		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
-		request.setMatchId("1848756405");
-
-		SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
-		api.execute(request);
-	}
 
 	public SteamApi(String steamKey) {
 		this.steamKey = steamKey;
@@ -59,21 +54,36 @@ public class SteamApi {
 			builder.setParameter("format", "json");
 			URI uri = builder.build();
 
-			System.out.println(uri.toASCIIString());
+			//System.out.println(uri.toASCIIString());
 			HttpGet getRequest = new HttpGet(uri);
-			;
 			
-			response = EntityUtils.toString(client.execute(getRequest).getEntity());
+			entity = client.execute(getRequest).getEntity();
+			
+			//check if entity is null
+			if (entity == null){
+				System.out.println("Entity null");
+			}
+			else{
+			response = EntityUtils.toString(entity);
 			ObjectMapper mapper = new ObjectMapper();
-
-			MatchDetail MatchDetail = mapper.readValue(response, MatchDetail.class);
-
+			
+			//MatchDetail MatchDetail = mapper.readValue(response, MatchDetail.class);
+			//System.out.println(MatchDetail);
+			SteamUser steamUser = mapper.readValue(response, SteamUser.class);
+			System.out.println(steamUser.getResponse().getPlayers().get(0).getLastLogoff());
+//			MatchHistory MatchHistory = mapper.readValue(response, MatchHistory.class);
+//			System.out.println(MatchHistory.getResult().getMatches().get(2));
+//			System.out.println(MatchDetail.getResult().getPlayers().get(2));
+			EntityUtils.consume(entity);
+			getRequest.releaseConnection();
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println(response);
+		//System.out.println(response);
 		return "test";
 	}
 

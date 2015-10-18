@@ -1,7 +1,41 @@
 package com.wilson.client.dota.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MatchHistoryPlayer {
-	"account_id": 42200431,
-	"player_slot": 0,
-	"hero_id": 2
+	private Long accountId;
+	private int playerSlot;
+	private int heroId;
+	
+	public MatchHistoryPlayer(){
+		
+	}
+	
+	//Setters
+	@JsonProperty("account_id")
+	public void setAccountId(Long accountId){
+		this.accountId = accountId;
+	}
+	@JsonProperty("player_slot")
+	public void setPlayerSlot(int playerSlot){
+		this.playerSlot = playerSlot;
+	}
+	@JsonProperty("hero_id")
+	public void setHeroId(int heroId){
+		this.heroId = heroId;
+	}
+	
+	//Getters
+	@JsonProperty("account_id")
+	public Long getAccountId(){
+		return accountId;
+	}
+	@JsonProperty("player_slot")
+	public int getPlayerSlot(){
+		return playerSlot;
+	}
+	@JsonProperty("hero_id")
+	public int getHeroId(){
+		return heroId;
+	}
 }

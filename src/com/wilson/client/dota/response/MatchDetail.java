@@ -17,6 +17,7 @@ public class MatchDetail {
 	public void setResult(MatchDetailResult result){
 		this.result = result;
 	}
+	
 		
 	
 	//getter

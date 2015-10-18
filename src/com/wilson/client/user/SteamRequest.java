@@ -1,4 +1,4 @@
-package com.wilson.client;
+package com.wilson.client.user;
 
 import java.util.List;
 
