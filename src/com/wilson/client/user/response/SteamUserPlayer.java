@@ -13,7 +13,7 @@ public class SteamUserPlayer {
 		private String avatar;
 		private String avatarMedium;
 		private String avatarFull;
-		private String personaState; 
+		private int personaState; 
 		private String primaryClanId;
 		private int timeCreated;
 		private int personaStateFlags;
@@ -60,7 +60,7 @@ public class SteamUserPlayer {
 			return avatarFull;
 		}
 		@JsonProperty("personastate")
-		public String getPersonaState(){
+		public int getPersonaState(){
 			return personaState;
 		}
 		@JsonProperty("primaryclanid")
@@ -125,7 +125,7 @@ public class SteamUserPlayer {
 			this.avatarFull = avatarFull;
 		}
 		@JsonProperty("personastate")
-		public void setPersonaState(String personaState){
+		public void setPersonaState(int personaState){
 			this.personaState = personaState;
 		}
 		@JsonProperty("primaryclanid")

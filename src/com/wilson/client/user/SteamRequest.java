@@ -11,6 +11,8 @@ public interface SteamRequest {
 	public String getSteamMethod();
 
 	public String getSteamMethodVersion();
+	
+	public Class getResponseType();
 
 	public List<NameValuePair> getSteamParameters();
 }
