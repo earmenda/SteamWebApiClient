@@ -1,88 +1,86 @@
-CREATE SEQUENCE PLAYER_SEQUENCE START WITH 1;
+CREATE TABLE player_summary	(
+	steam_id BIGINT NOT NULL,
+	community_visibility_state INTEGER NOT NULL,
+	persona_name VARCHAR(40),
+	last_logoff BIGINT,
+	profile_url VARCHAR(255),
+	avatar VARCHAR(255),
+	avatar_medium VARCHAR(255),
+	avatar_full VARCHAR(255),
+	persona_state INTEGER,
+	primary_clan_id VARCHAR(40),
+	time_created BIGINT,
+	persona_state_flag INT,
+	game_extra_info VARCHAR(40),
+	game_id VARCHAR(40),
+	CONSTRAINT player_summary_pk PRIMARY KEY (STEAM_ID)
+)
 
-CREATE TABLE PLAYER_SUMMARY	
-	STEAM_ID VARCHAR(40) NOT NULL
-	COMMUNITY_VISIBILITY_STATE INTEGER NOT NULL,
-	PERSONA_NAME VARCHAR(40),
-	LAST_LOGOFF BIGINT,
-	PROFILE_URL VARCHAR(255),
-	AVATAR VARCHAR(255),
-	AVATAR_MEDIUM VARCHAR(255),
-	AVATAR_FULL VARCHAR(255),
-	PERSONA_STATE INTEGER,
-	PRIMARY_CLAN_ID VARCHAR(40),
-	TIME_CREATED BIGINT,
-	PERSONA_STATE_FLAG INT,
-	GAME_EXTRA_INFO VARCHAR(40),
-	GAME_ID VARCHAR(40)
-	PRIMARY KEY (STEAM_ID);
+CREATE TABLE match_detail(
+	match_id BIGINT,
+	radiant_win BOOLEAN,
+	duration INT,
+	start_time BIGINT,
+	match_seq_num BIGINT,
+	tower_status_radiant INT,
+	tower_status_dire INT,
+	barracks_status_radiant INT,
+	barracks_status_dire INT,
+	cluster INT,
+	first_blood_time INT,
+	lobby_type INT,
+	human_players INT,
+	league_id INT,
+	positive_votes INT,
+	game_mode INT,
+	engine INT,
+	CONSTRAINT match_detail_pk PRIMARY KEY (match_id)
+)
 
+CREATE TABLE match_detail_player(
+	id BIGSERIAL,
+	match_id INT,
+	steam_id INT,
+	accountid BIGINT,
+	player_slot INT,
+	hero_id INT,
+	item0 INT,
+	item1 INT, 
+	item2 INT,
+	item3 INT,
+	item4 INT,
+	item5 INT,
+	kills INT,
+	deaths INT,
+	assists INT,
+	leaver_status INT,
+	gold INT,
+	last_hits INT,
+	denies INT,
+	gold_per_min INT,
+	xp_per_min INT,
+	gold_spent INT,
+	hero_damage INT,
+	tower_damage INT, 
+	hero_healing INT,
+	level INT,
+	CONSTRAINT match_detail_player_pk PRIMARY KEY (id),
+	CONSTRAINT match_detail_player_match_id_fk FOREIGN KEY (match_id) REFERENCES MATCH_DETAIL (match_id),
+	CONSTRAINT match_detail_player_steam_id_fk FOREIGN KEY (steam_id) REFERENCES PLAYER_SUMMARY (steam_id)
+)
 
-CREATE TABLE MATCH_DETAIL
-	(Forign key to the MATCH DETAILS PLAYER TABLE)
-	RADIANT_WIN BOOLEAN,
-	DURATION INT,
-	START_TIME BIGINT,
-	MATCH_ID BIGINT,
-	MATCH_SEQ_NUM BIGINT,
-	TOWER_STATUS_RADIANT INT,
-	TOWER_STATUS_DIRE INT,
-	BARRACKS_STATUS_RADIANT INT,
-	BARRACKS_STATUS_DIRE INT,
-	CLUSTER INT,
-	FIRST_BLOOD_TIME INT,
-	LOBBY_TYPE INT,
-	HUMAN_PLAYERS INT,
-	LEAGUE_ID INT,
-	POSITIVE_VOTES INT,
-	GAME_MODE INT,
-	ENGINE INT,
-	PRIMARY KEY (MATCH_ID);
+CREATE TABLE match_detail_player_ability(
+	id BIGSERIAL,
+	match_player_id BIGINT,
+	ability INT,
+	time INT,
+	level INT,
+	CONSTRAINT match_detail_player_ability_pk PRIMARY KEY (id),
+	CONSTRAINT match_detail_ability_match_detail_player_fk FOREIGN KEY (match_player_id) REFERENCES match_detail_player(id)
+)
 
-CREATE TABLE MATCH_DETAIL_PLAYER
-	ID BIGSERIAL,
-	MATCH_ID INT,
-	STEAM_ID INT,
-	ACCOUNTID BIGINT,
-	PLAYER_SLOT INT,
-	HERO_ID INT,
-	ITEM0 INT,
-	ITEM1 INT, 
-	ITEM2 INT,
-	ITEM3 INT,
-	ITEM4 INT,
-	ITEM5 INT,
-	KILLS INT,
-	DEATHS INT,
-	ASSISTS INT,
-	LEAVER_STATUS INT,
-	GOLD INT,
-	LAST_HITS INT,
-	DENIES INT,
-	GOLD_PER_MIN INT,
-	XP_PER_MIN INT,
-	GOLD_SPENT INT,
-	HERO_DAMAGE INT,
-	TOWER_DAMAGE INT, 
-	HERO_HEALING INT,
-	LEVEL INT,
-	PRIMARY KEY (ID),
-	CONSTRAINT MATCH_DETAIL_PLAYER_MATCH_ID_FK FOREIGN KEY (MATCH_ID) REFERENCES MATCH_DETAIL (MATCH_ID),
-	CONSTRAINT MATCH_DETAIL_PLAYER_STEAM_ID_FK FOREIGN KEY (STEAM_ID) REFERENCES PLAYER_SUMMARY (STEAM_ID);
-
-CREATE TABLE MATCH_DETAIL_ABILITY
-	ID BIGSERIAL,
-	MATCH_PLAYER_ID BIGINT,
-	ABILITY INT,
-	TIME INT,
-	LEVEL INT,
-	PRIMARY KEY (ABILITY),
-	CONSTRAINT MATCH_DETAIL_ABILITY_MATCH_DETAIL_PLAYER_FK FOREIGN KEY (MATCH_PLAYER_ID) REFERENCES MATCH_DETAIL_PLAYER(ID);
-
-
-
-
-CREATE TABLE ABILITY
+CREATE TABLE ABILITY(
+)
 
 
 
