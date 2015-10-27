@@ -7,13 +7,13 @@ import java.util.Map;
 import org.apache.http.NameValuePair;
 
 import com.wilson.client.UriUtils;
-import com.wilson.client.user.response.SteamUser;
+import com.wilson.client.user.response.SteamPlayerSummary;
 
 public class SteamGetPlayerSummaryRequest extends SteamInterfaceRequest {
 
 	private static final String STEAM_METHOD = "/GetPlayerSummaries";
 	private static final String STEAM_METHOD_VERSION = "/V002";
-	private static final Class RESPONSE_TYPE = SteamUser.class;
+	private static final Class RESPONSE_TYPE = SteamPlayerSummary.class;
 
 	private Map<String, String> parameters;
 
@@ -40,7 +40,7 @@ public class SteamGetPlayerSummaryRequest extends SteamInterfaceRequest {
 		parameters.put("steamids", steamId);
 	}
 	@Override
-	public Class<SteamUser> getResponseType(){
+	public Class<SteamPlayerSummary> getResponseType(){
 		return RESPONSE_TYPE;
 	}	
 }

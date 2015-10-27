@@ -3,6 +3,7 @@ package com.wilson.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wilson.client.dota.DotaGetMatchDetailsRequest;
 import com.wilson.client.dota.DotaGetMatchHistoryRequest;
 import com.wilson.client.user.SteamGetPlayerSummaryRequest;
 
@@ -14,10 +15,11 @@ public class Main {
 
 	List<String> partyList = new ArrayList<String>();
 	
-	//DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
-	SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
+	DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
+	//SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
 	//DotaGetMatchHistoryRequest request = new DotaGetMatchHistoryRequest();
-	request.setSteamId("76561197999636832");
+//	request.setSteamId("76561197999636832");
+	request.setMatchId("1848756405");
 
 	//request.setMatchId("1848756405");
 

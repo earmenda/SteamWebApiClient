@@ -2,7 +2,7 @@ package com.wilson.client.user.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SteamUserPlayer {
+public class SteamPlayerSummaryResponse {
 		
 		private String steamId;
 		private int communityVisibilityState;
@@ -20,7 +20,7 @@ public class SteamUserPlayer {
 		private String gameExtraInfo;
 		private String gameId;
 		
-		public SteamUserPlayer() {
+		public SteamPlayerSummaryResponse() {
 		}
 
 		//Getters

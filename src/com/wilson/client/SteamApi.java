@@ -12,7 +12,6 @@ import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilson.client.user.SteamRequest;
-import com.wilson.client.user.response.SteamUser;
 
 public class SteamApi {
 
@@ -69,9 +68,9 @@ public class SteamApi {
 			response = EntityUtils.toString(entity);
 			ObjectMapper mapper = new ObjectMapper();
 //			MatchHistory MatchHistory = mapper.readValue(response, MatchHistory.class);
- 			Object steamUser = responseType.cast( mapper.readValue(response, responseType));
+ 			Object steamUser = responseType.cast(mapper.readValue(response, responseType));
 //			System.out.println(MatchHistory.getResult().getMatches().get(2));
-//			System.out.println(MatchDetail.getResult().getPlayers().get(2));
+//			System.out.println(((MatchDetail) steamUser).getResult().getPlayers().get(2).getAdditionalUnits());
 			EntityUtils.consume(entity);
 			getRequest.releaseConnection();
 			}

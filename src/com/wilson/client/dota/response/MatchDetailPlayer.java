@@ -29,6 +29,7 @@ public class MatchDetailPlayer {
 	private int heroHealing;
 	private int level;
 	private List<MatchDetailAbilityUpgrades> abilityUpgrades;
+	private List<MatchDetailAdditionalUnits> additionalUnits;
 
 	
 	//Constructor
@@ -126,6 +127,10 @@ public class MatchDetailPlayer {
 	public List<MatchDetailAbilityUpgrades> getAbilityUpgrades(){
 		return abilityUpgrades;
 	}
+	@JsonProperty("additional_units")
+	public List<MatchDetailAdditionalUnits> getAdditionalUnits(){
+		return additionalUnits;
+	}
 
 
 	
@@ -218,6 +223,10 @@ public class MatchDetailPlayer {
 	@JsonProperty("ability_upgrades")
 	public void setAbiltiyUpgrades(List<MatchDetailAbilityUpgrades> abilityUpgrades){
 		this.abilityUpgrades = abilityUpgrades;
+	}
+	@JsonProperty("additional_units")
+	public void setAdditionalUnits(List<MatchDetailAdditionalUnits> additionalUnits){
+		this.additionalUnits = additionalUnits;
 	}
 }
 

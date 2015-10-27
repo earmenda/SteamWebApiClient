@@ -14,7 +14,7 @@ CREATE TABLE player_summary	(
 	game_extra_info VARCHAR(40),
 	game_id VARCHAR(40),
 	CONSTRAINT player_summary_pk PRIMARY KEY (STEAM_ID)
-)
+);
 
 CREATE TABLE match_detail(
 	match_id BIGINT,
@@ -35,7 +35,7 @@ CREATE TABLE match_detail(
 	game_mode INT,
 	engine INT,
 	CONSTRAINT match_detail_pk PRIMARY KEY (match_id)
-)
+);
 
 CREATE TABLE match_detail_player(
 	id BIGSERIAL,
@@ -67,7 +67,7 @@ CREATE TABLE match_detail_player(
 	CONSTRAINT match_detail_player_pk PRIMARY KEY (id),
 	CONSTRAINT match_detail_player_match_id_fk FOREIGN KEY (match_id) REFERENCES MATCH_DETAIL (match_id),
 	CONSTRAINT match_detail_player_steam_id_fk FOREIGN KEY (steam_id) REFERENCES PLAYER_SUMMARY (steam_id)
-)
+);
 
 CREATE TABLE match_detail_player_ability(
 	id BIGSERIAL,
@@ -77,10 +77,31 @@ CREATE TABLE match_detail_player_ability(
 	level INT,
 	CONSTRAINT match_detail_player_ability_pk PRIMARY KEY (id),
 	CONSTRAINT match_detail_ability_match_detail_player_fk FOREIGN KEY (match_player_id) REFERENCES match_detail_player(id)
-)
+);
+
+CREATE TABLE match_detail_additional_units(
+	id BIGSERIAL,
+	match_player_id BIGINT,
+	unit_name VARCHAR(40),
+	item0 INT,
+	item1 INT, 
+	item2 INT,
+	item3 INT,
+	item4 INT,
+	item5 INT,
+	CONSTRAINT match_detail_additional_units_pk PRIMARY KEY (id),
+	CONSTRAINT match_detail_additional_units_match_detail_player_fk FOREIGN KEY (match_player_id) REFERENCES match_detail_player(id)
+);
 
 CREATE TABLE ABILITY(
-)
+        id INT,
+        match_player_ability_id BIGINT,
+        hero_id INT,
+        name VARCHAR(255),
+        localized_name VARCHAR(255),
+        CONSTRAINT ability_pk PRIMARY KEY (id),
+        CONSTRAINT ability_match_detail_player_ability_fk FOREIGN KEY (match_player_ability_id) REFERENCES match_detail_player_ability(id)
+);
 
 
 
