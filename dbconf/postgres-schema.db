@@ -95,12 +95,10 @@ CREATE TABLE match_detail_additional_units(
 
 CREATE TABLE ABILITY(
         id INT,
-        match_player_ability_id BIGINT,
         hero_id INT,
         name VARCHAR(255),
         localized_name VARCHAR(255),
         CONSTRAINT ability_pk PRIMARY KEY (id),
-        CONSTRAINT ability_match_detail_player_ability_fk FOREIGN KEY (match_player_ability_id) REFERENCES match_detail_player_ability(id)
 );
 
 
