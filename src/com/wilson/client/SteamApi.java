@@ -1,5 +1,6 @@
 package com.wilson.client;
 
+import java.io.IOException;
 import java.net.URI;
 
 import org.apache.http.HttpEntity;
@@ -34,10 +35,12 @@ public class SteamApi {
 
 	
 	
-	public String execute(SteamRequest request) {
+	public <T> Object execute(SteamRequest request) {
 		// HttpGet getRequest = new
 		// HttpGet("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key="
 		// + steamKey + "&steamids=" + steamId + "&format=json");
+		Object steamUser = null;
+		HttpGet getRequest = null;
 		Class responseType = request.getResponseType();
 		String response = null;
 		try {
@@ -56,7 +59,7 @@ public class SteamApi {
 			URI uri = builder.build();
 
 			//System.out.println(uri.toASCIIString());
-			HttpGet getRequest = new HttpGet(uri);
+			getRequest = new HttpGet(uri);
 			
 			entity = client.execute(getRequest).getEntity();
 			
@@ -68,20 +71,28 @@ public class SteamApi {
 			response = EntityUtils.toString(entity);
 			ObjectMapper mapper = new ObjectMapper();
 //			MatchHistory MatchHistory = mapper.readValue(response, MatchHistory.class);
- 			Object steamUser = responseType.cast(mapper.readValue(response, responseType));
+ 			steamUser = mapper.readValue(response, responseType);
 //			System.out.println(MatchHistory.getResult().getMatches().get(2));
 //			System.out.println(((MatchDetail) steamUser).getResult().getPlayers().get(2).getAdditionalUnits());
-			EntityUtils.consume(entity);
-			getRequest.releaseConnection();
+ 			
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally{
+			try {
+				EntityUtils.consume(entity);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getRequest.releaseConnection();	
+		}
 		
 		//System.out.println(response);
-		return "test";
+		return steamUser;
 	}
 
 	public String getSteamKey() {

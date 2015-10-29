@@ -1,9 +1,13 @@
 package com.wilson.client.dota.response;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-public class MatchDetail {
-	
+
+
+public class MatchDetail implements java.io.Serializable{
+
 	private MatchDetailResult result;
 
 	

@@ -2,8 +2,10 @@ package com.wilson.client.dota.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDetailPlayer {
 	private Long accountId;
 	private int playerSlot;

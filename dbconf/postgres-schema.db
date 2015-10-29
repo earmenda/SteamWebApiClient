@@ -1,18 +1,22 @@
 CREATE TABLE player_summary	(
-	steam_id BIGINT NOT NULL,
+	steam_id VARCHAR(40) NOT NULL,
 	community_visibility_state INTEGER NOT NULL,
+	profile_state INT,
 	persona_name VARCHAR(40),
 	last_logoff BIGINT,
+	comment_permission INT,
 	profile_url VARCHAR(255),
 	avatar VARCHAR(255),
 	avatar_medium VARCHAR(255),
 	avatar_full VARCHAR(255),
 	persona_state INTEGER,
+	real_name VARCHAR,
 	primary_clan_id VARCHAR(40),
 	time_created BIGINT,
-	persona_state_flag INT,
+	persona_state_flags INT,
 	game_extra_info VARCHAR(40),
 	game_id VARCHAR(40),
+	loc_country_code VARCHAR,
 	CONSTRAINT player_summary_pk PRIMARY KEY (STEAM_ID)
 );
 

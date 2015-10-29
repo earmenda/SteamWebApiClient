@@ -1,7 +1,9 @@
 package com.wilson.client.dota.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchHistoryPlayer {
 	private Long accountId;
 	private int playerSlot;
