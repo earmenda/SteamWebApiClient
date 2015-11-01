@@ -24,7 +24,7 @@ public class SteamPlayer implements Serializable {
 		private int commentPermission;
 		private String profileUrl;
 		private String avatar;
-		private String avatarMedium;
+		private String avatarMedium;   
 		private String avatarFull;
 		private int personaState; 
 		private String realName;

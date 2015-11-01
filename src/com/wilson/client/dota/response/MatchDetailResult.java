@@ -2,8 +2,22 @@ package com.wilson.client.dota.response;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name = "match_detail")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDetailResult {
 	
 	private List<MatchDetailPlayer> players;
@@ -32,76 +46,96 @@ public class MatchDetailResult {
 	}
 	
 	//Getter
-	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "matchDetailResult", cascade = CascadeType.SAVE_UPDATE)//WHY DOESNT THIS SHIT WORK
 	public List<MatchDetailPlayer> getPlayers(){
 		return players;
 	}
-	@JsonProperty("account_id")
+
+	@Column(name = "radiant_win")
+	@JsonProperty("radiant_win")
 	public boolean getRadiantWin(){
 		return radiantWin;
 	}
+	@Column(name = "duration")
 	public Long getDuration(){
 		return duration;
 	}	
+	@Column(name = "start_time")
 	@JsonProperty("start_time")
 	public Long getStartTime(){
 		return startTime;
 	}	
+	@Id
+	@Column(name = "match_id")
 	@JsonProperty("match_id")
 	public Long getMatchId(){
 		return matchId;
 	}	
+	@Column(name = "match_seq_num")
 	@JsonProperty("match_seq_num")
 	public Long getMatchSeqNum(){
 		return matchSeqNum;
 	}	
+	@Column(name = "tower_status_radiant")
 	@JsonProperty("tower_status_radiant")
 	public int getTowerStatusRadiant(){
 		return towerStatusRadiant;
 	}	
+	@Column(name = "tower_status_dire")
 	@JsonProperty("tower_status_dire")
 	public int getTowerStatusDire(){
 		return towerStatusDire;
 	}	
+	@Column(name = "barracks_status_radiant")
 	@JsonProperty("barracks_status_radiant")
 	public int getBarracksStatusRadiant(){
 		return barracksStatusRadiant;
 	}
+	@Column(name = "barracks_status_dire")
 	@JsonProperty("barracks_status_dire")
 	public int getBarracksStatusDire(){
 		return barracksStatusDire;
 	}
+	@Column(name = "cluster")
 	public int getCluster(){
 		return cluster;
 	}
+	@Column(name = "first_blood_time")
 	@JsonProperty("first_blood_time")
 	public Long getFirstBloodTime(){
 		return firstBloodTime;
 	}
+	@Column(name = "lobby_type")
 	@JsonProperty("lobby_type")
 	public int getLobbyType(){
 		return lobbyType;
 	}
+	@Column(name = "human_players")
 	@JsonProperty("human_players")
 	public int getHumanPlayers(){
 		return humanPlayers;
 	}
+	@Column(name = "league_id")
 	@JsonProperty("leagueid")
 	public int getLeagueId(){
 		return leagueId;
 	}
+	@Column(name = "positive_votes")
 	@JsonProperty("positive_votes")
 	public int getPositiveVotes(){
 		return positiveVotes;
 	}
+	@Column(name = "negative_votes")
 	@JsonProperty("negative_votes")
 	public int getNegativeVotes(){
 		return negativeVotes;
 	}
+	@Column(name = "game_mode")
 	@JsonProperty("game_mode")
 	public int getGameMode(){
 		return gameMode;
 	}
+	@Column(name = "engine")
 	public int getEngine(){
 		return engine;
 	}
@@ -109,71 +143,93 @@ public class MatchDetailResult {
 	public void setPlayers(List<MatchDetailPlayer> players){
 		this.players = players;
 	}
+	@Column(name = "radiant_win")
 	@JsonProperty("radiant_win")
-	public void setrRadiantWin(boolean radiantWin){
+	public void setRadiantWin(boolean radiantWin){
 		this.radiantWin = radiantWin;
 	}
+	@Column(name = "duration")
 	public void setDuration(Long duration){
 		this.duration = duration;
 	}
+	@Column(name = "start_time")
 	@JsonProperty("start_time")
 	public void setStartTime(Long startTime){
 		this.startTime = startTime;
 	}
+	@Column(name = "match_id")
 	@JsonProperty("match_id")
 	public void setMatchId(Long matchId){
 		this.matchId = matchId;
 	}
+	@Column(name = "match_seq_num")
 	@JsonProperty("match_seq_num")
 	public void setMatchSeqNum(Long matchSeqNum){
 		this.matchSeqNum = matchSeqNum;
 	}
+	@Column(name = "tower_status_radiant")
 	@JsonProperty("tower_status_radiant")
 	public void setTowerStatusRadiant(int towerStatusRadiant){
 		this.towerStatusRadiant = towerStatusRadiant;
 	}
+	@Column(name = "tower_status_dire")
 	@JsonProperty("tower_status_dire")
 	public void setTowerStatusDire(int towerStatusDire){
 		this.towerStatusDire = towerStatusDire;
 	}
+	@Column(name = "barracks_status_radiant")
 	@JsonProperty("barracks_status_radiant")
 	public void setBarracksStatusRadiant(int barracksStatusRadiant){
 		this.barracksStatusRadiant = barracksStatusRadiant;
 	}
+	@Column(name = "barracks_status_dire")
 	@JsonProperty("barracks_status_dire")
 	public void setBarracksStatusDire(int barracksStatusDire){
 		this.barracksStatusDire = barracksStatusDire;
 	}
+	@Column(name = "cluster")
 	public void setcluster(int cluster){
 		this.cluster = cluster;
 	}
+	@Column(name = "first_blood_time")
 	@JsonProperty("first_blood_time")
 	public void setFirstBloodTime(Long firstBloodTime){
 		this.firstBloodTime = firstBloodTime;
 	}
+	@Column(name = "lobby_type")
 	@JsonProperty("lobby_type")
 	public void setLobbyType(int lobbyType){
 		this.lobbyType = lobbyType;
 	}
+	@Column(name = "human_players")
 	@JsonProperty("human_players")
 	public void setHumanPlayers(int humanPlayers){
 		this.humanPlayers = humanPlayers;
 	}
+	@Column(name = "league_id")
 	@JsonProperty("leagueid")
 	public void setLeagueId(int leagueId){
 		this.leagueId = leagueId;
 	}
+	@Column(name = "positive_votes")
 	@JsonProperty("positive_votes")
 	public void setPositiveVotes(int positiveVotes){
 		this.positiveVotes = positiveVotes;
 	}
+	@Column(name = "negative_votes")
 	@JsonProperty("negative_votes")
 	public void setNegativeVotes(int negativeVotes){
 		this.negativeVotes = negativeVotes;
 	}
+	@Column(name = "game_mode")
 	@JsonProperty("game_mode")
 	public void setGameMode(int gameMode){
 		this.gameMode = gameMode;
+	}
+	@Column(name = "engine")
+	public void setEngine(int engine){
+		this.engine = engine;
+		
 	}
 	
 }

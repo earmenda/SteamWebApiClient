@@ -35,6 +35,7 @@ CREATE TABLE match_detail(
 	lobby_type INT,
 	human_players INT,
 	league_id INT,
+	negative_votes INT,
 	positive_votes INT,
 	game_mode INT,
 	engine INT,

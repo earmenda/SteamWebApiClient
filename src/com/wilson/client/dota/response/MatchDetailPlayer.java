@@ -2,12 +2,24 @@ package com.wilson.client.dota.response;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name = "match_detail_player")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDetailPlayer {
-	private Long accountId;
+	private String steamId; // accountid
 	private int playerSlot;
 	private int heroId;
 	private int item0;
@@ -30,198 +42,272 @@ public class MatchDetailPlayer {
 	private int towerDamage;
 	private int heroHealing;
 	private int level;
+	private int id;
 	private List<MatchDetailAbilityUpgrades> abilityUpgrades;
 	private List<MatchDetailAdditionalUnits> additionalUnits;
+
+	private MatchDetailResult matchDetailResult;
 
 	
 	//Constructor
 	public MatchDetailPlayer(){
-		
-	}
+		}
 	//Getters
-	@JsonProperty("account_id")
-	public Long getAccountId() {
-		return accountId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "match_id", nullable = false)
+	public MatchDetailResult getMatchDetailResult(){
+		System.out.println("MATCH DETAIL RESULT " + matchDetailResult);
+		return this.matchDetailResult;
 	}
+	@Column(name = "steam_id")
+	@JsonProperty("account_id")
+	public String getSteamId() {
+		return steamId;
+	}
+	@Column(name = "player_slot")
 	@JsonProperty("player_slot")
-	public int getPlayer_slot() {
+	public int getPlayerSlot() {
 		return playerSlot;
 	}
+	@Column(name = "hero_id")
 	@JsonProperty("hero_id")
 	public int getHeroId(){
 		return heroId;
 	}
+	@Column(name = "item0")
 	@JsonProperty("item_0")
 	public int getItem0(){
 		return item0;
 		}
+	@Column(name = "item1")
 	@JsonProperty("item_1")
 	public int getItem1(){
 		return item1;
 	}
+	@Column(name = "item2")
 	@JsonProperty("item_2")
 	public int getItem2(){
 		return item2;
 	}
+	@Column(name = "item3")
 	@JsonProperty("item_3")
 	public int getItem3(){
 		return item3;
 	}
+	@Column(name = "item4")
 	@JsonProperty("item_4")
 	public int getItem4(){
 		return item4;
 	}
+	@Column(name = "item5")
 	@JsonProperty("item_5")
 	public int getItem5(){
 		return item5;
 	}
+	@Column(name = "kills")
 	public int getKills(){
 		return kills;
 	}
+	@Column(name = "deaths")
 	public int getDeaths(){
 		return deaths;
 	}
+	@Column(name = "assists")
 	public int getAssists(){
 		return assists;
 	}
+	@Column(name = "leaver_status")
 	@JsonProperty("leaver_status")
 	public int getLeaverStatus(){
 		return leaverStatus;
 	}
+	@Column(name = "gold")
 	public int getGold(){
 		return gold;
 	}
+	@Column(name = "last_hits")
 	@JsonProperty("last_hits")
 	public int getLastHits(){
 		return lastHits;
 	}
+	@Column(name = "denies")
 	public int getDenies(){
 		return denies;
 	}
+	@Column(name = "gold_per_min")
 	@JsonProperty("gold_per_min")
-	public int getGoldPerMinute(){
+	public int getGoldPerMin(){
 		return goldPerMin;
 	}
+	@Column(name = "xp_per_min")
 	@JsonProperty("xp_per_min")
 	public int getXpPerMin(){
 		return xpPerMin;
 	}
+	@Column(name = "gold_spent")
 	@JsonProperty("gold_spent")
 	public int getGoldSpent(){
 		return goldSpent;
 	}
+	@Column(name = "hero_damage")
 	@JsonProperty("hero_damage")
 	public int getHeroDamage(){
 		return heroDamage;
 	}
+	@Column(name = "tower_damage")
 	@JsonProperty("tower_damage")
 	public int getTowerDamage(){
 		return towerDamage;
 	}
+	@Column(name = "hero_healing")
 	@JsonProperty("hero_healing")
 	public int getHeroHealing(){
 		return heroHealing;
 	}
-	public int getLevels(){
+	@Column(name = "level")
+	public int getLevel(){
 		return level;
 	}	
-	@JsonProperty("ability_upgrades")
-	public List<MatchDetailAbilityUpgrades> getAbilityUpgrades(){
-		return abilityUpgrades;
+	@Id
+//	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@Column(name = "id")
+	public int getId(){
+		return id;
 	}
-	@JsonProperty("additional_units")
-	public List<MatchDetailAdditionalUnits> getAdditionalUnits(){
-		return additionalUnits;
-	}
+//	@JsonProperty("ability_upgrades")
+//	public List<MatchDetailAbilityUpgrades> getAbilityUpgrades(){
+//		return abilityUpgrades;
+//	}
+//	@JsonProperty("additional_units")
+//	public List<MatchDetailAdditionalUnits> getAdditionalUnits(){
+//		return additionalUnits;
+//	}
 
 
 	
 	//Setters
-	@JsonProperty("account_id")
-	public void setAccountId(Long accountId){
-		this.accountId = accountId;
+
+	public void setMatchDetailResult(MatchDetailResult matchDetailResult){
+		this.matchDetailResult = matchDetailResult;
 	}
+	
+	@Column(name = "steam_id")
+	@JsonProperty("account_id")
+	public void setSteamId(Long accountId){	
+		long steam64 = accountId + (Long.parseLong("76561197960265728"));
+		this.steamId = steam64 + "";
+	}
+	@Column(name = "player_slot")
 	@JsonProperty("player_slot")
 	public void setPlayerSlot(int playerSlot){
 		this.playerSlot = playerSlot;
 	}
+	@Column(name = "hero_id")
 	@JsonProperty("hero_id")
 	public void setHeroId(int heroId){
 		this.heroId = heroId;
 	}
+	@Column(name = "item0")
 	@JsonProperty("item_0")
 	public void setItem0(int item0){
 		this.item0 = item0;
 	}
+	@Column(name = "item1")
 	@JsonProperty("item_1")
 	public void setItem1(int item1){
 		this.item1 = item1;
 	}
+	@Column(name = "item2")
 	@JsonProperty("item_2")
 	public void setItem2(int item2){
 		this.item2 = item2;
 	}
+	@Column(name = "item3")
 	@JsonProperty("item_3")
 	public void setItem3(int item3){
 		this.item3 = item3;
 	}
+	@Column(name = "item4")
 	@JsonProperty("item_4")
 	public void setItem4(int item4){
 		this.item4 = item4;
 	}
+	@Column(name = "item5")
 	@JsonProperty("item_5")
 	public void setItem5(int item5){
 		this.item5 = item5;
 	}
+	@Column(name = "kills")
 	public void setKills(int kills){
 		this.kills = kills;
 	}
+	@Column(name = "deaths")
 	public void setDeaths(int deaths){
 		this.deaths = deaths;
 	}
+	@Column(name = "assists")
 	public void setAssists(int assists){
 		this.assists = assists;
 	}
+	@Column(name = "leaver_status")
 	@JsonProperty("leaver_status")
 	public void setLeaverStatus(int leaverStatus){
 		this.leaverStatus = leaverStatus;
 	}
+	@Column(name = "gold")
 	public void setGold(int gold){
 		this.gold = gold;
 	}
+	@Column(name = "last_hits")
 	@JsonProperty("last_hits")
 	public void setLastHits(int lastHits){
 		this.lastHits = lastHits;
 	}
+	@Column(name = "denies")
 	public void setDenies(int denies){
 		this.denies = denies;
 	}
+	@Column(name = "gold_per_min")
 	@JsonProperty("gold_per_min")
 	public void setGoldPerMin(int goldPerMin){
 		this.goldPerMin = goldPerMin;
 	}
+	@Column(name = "xp_per_min")
 	@JsonProperty("xp_per_min")
 	public void setXpPerMin(int xpPerMin){
 		this.xpPerMin = xpPerMin;
 	}
+	@Column(name = "gold_spent")
 	@JsonProperty("gold_spent")
 	public void setGoldSpent(int goldSpent){
 		this.goldSpent = goldSpent;
 	}
+	@Column(name = "hero_damage")
 	@JsonProperty("hero_damage")
 	public void setHeroDamage(int heroDamage){
 		this.heroDamage = heroDamage;
-	}@JsonProperty("tower_damage")
+	}
+	@Column(name = "tower_damage")
+	@JsonProperty("tower_damage")
 	public void setTowerDamage(int towerDamage){
 		this.towerDamage = towerDamage;
 	}
+	@Column(name = "hero_healing")
 	@JsonProperty("hero_healing")
 	public void setHeroHealing(int heroHealing){
 		this.heroHealing = heroHealing;
 	}
+	@Column(name = "level")
 	public void setLevel(int level){
 		this.level = level;
 	}
+	
+		
+	@Column(name = "id")
+	public void setId (int id){
+		this.id = id;
+	}
+	
 	@JsonProperty("ability_upgrades")
 	public void setAbiltiyUpgrades(List<MatchDetailAbilityUpgrades> abilityUpgrades){
 		this.abilityUpgrades = abilityUpgrades;

@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import com.wilson.client.dota.DotaGetMatchDetailsRequest;
 import com.wilson.client.dota.DotaGetMatchHistoryRequest;
+import com.wilson.client.dota.response.MatchDetail;
+import com.wilson.client.dota.response.MatchDetailPlayer;
+import com.wilson.client.dota.response.MatchDetailResult;
 import com.wilson.client.dota.response.MatchHistory;
 import com.wilson.client.dota.response.MatchHistoryMatch;
 import com.wilson.client.dota.response.MatchHistoryPlayer;
@@ -46,6 +50,8 @@ public class Main {
 		// session.save(playerSummaryResponse.getResponse().getPlayers().get(0));
 		// session.getTransaction().commit();
 
+		
+		//Get Player Summary and store in DB
 		MatchHistoryMatch match = matchHistoryResponse.getResult().getMatches()
 				.get(0);
 		for (MatchHistoryPlayer player : match.getPlayers()) {
@@ -71,13 +77,56 @@ public class Main {
 				session.save(playerSummary);
 				session.getTransaction().commit();
 			} catch (Exception e) {
-//				e.printStackTrace();
+				// e.printStackTrace();
+			} finally {
+				session.clear();
 			}
-			
-
 		}
 		
+		//Make call to get MatchResults object
+		long detailId = match.getMatchId();
+
+		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
+		request.setMatchId(detailId + "");
+		MatchDetail matchDetailResponse = (MatchDetail) api.execute(request);
+		MatchDetailResult matchResults = matchDetailResponse.getResult();
+
+		//WTF does this do again? 
+		for (MatchDetailPlayer playerResponse : matchDetailResponse.getResult()
+				.getPlayers()) {
+			playerResponse.setMatchDetailResult(matchResults);
+		}
 		
+		//Store Match Results into DB
+		session.beginTransaction();
+		try {
+			MatchDetailPlayer player = new MatchDetailPlayer();			
+			session.save(matchResults);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		} finally {
+			session.clear();
+		}
+		
+		//Store first Match Player from latest match into DB
+		session.beginTransaction();
+		try {
+			MatchDetailPlayer player = new MatchDetailPlayer();
+			player = matchResults.getPlayers().get(0);
+			session.save(player);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		} finally {
+			session.clear();
+		}
+		
+
+		
+		api.close();
+		session.close();
+
 	}
 
 	//

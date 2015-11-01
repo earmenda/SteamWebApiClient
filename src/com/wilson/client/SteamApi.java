@@ -103,4 +103,7 @@ public class SteamApi {
 		this.steamKey = steamKey;
 	}
 
+	public void close(){
+		client.getConnectionManager().closeExpiredConnections();
+	}
 }
