@@ -14,5 +14,7 @@
     <mapping class="com.wilson.client.user.response.SteamPlayer" />
     <mapping class="com.wilson.client.dota.response.MatchDetailResult" />
     <mapping class="com.wilson.client.dota.response.MatchDetailPlayer" />
+    <mapping class="com.wilson.client.dota.response.MatchDetailAdditionalUnits" />
+    <mapping class="com.wilson.client.dota.response.MatchDetailAbilityUpgrades" />
 </session-factory>
 </hibernate-configuration>

@@ -1,5 +1,6 @@
 package com.wilson.client;
 
+import java.nio.channels.ShutdownChannelGroupException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,82 +51,80 @@ public class Main {
 		// session.save(playerSummaryResponse.getResponse().getPlayers().get(0));
 		// session.getTransaction().commit();
 
-		
-		//Get Player Summary and store in DB
+		// Get Player Summary and store in DB
 		MatchHistoryMatch match = matchHistoryResponse.getResult().getMatches()
 				.get(0);
-		for (MatchHistoryPlayer player : match.getPlayers()) {
-			Long id = player.getAccountId();
-			SteamPlayer playerSummary = null;
-
-			if (id == Long.parseLong("4294967295")) {
-				playerSummary = new SteamPlayer();
-				playerSummary.setSteamId("0");
-			} else {
-				String steamId = (id + Long.parseLong("76561197960265728"))
-						+ "";
-				SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
-				request.setSteamId(steamId);
-				SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
-						.execute(request);
-				playerSummary = playerSummaryResponse.getResponse()
-						.getPlayers().get(0);
-			}
-
-			session.beginTransaction();
-			try {
-				session.save(playerSummary);
-				session.getTransaction().commit();
-			} catch (Exception e) {
-				// e.printStackTrace();
-			} finally {
-				session.clear();
-			}
-		}
 		
-		//Make call to get MatchResults object
-		long detailId = match.getMatchId();
+		for (MatchHistoryPlayer player : match.getPlayers()) {
+			
+			Long id = player.getAccountId();
+			System.out.println(id);
+			String steamId = "0";
 
+			if (!(id == Long.parseLong("4294967295"))) {
+				steamId = (id + Long.parseLong("76561197960265728")) + "";
+			}
+			System.out.println("Account ID= " + id);
+			System.out.println("SteamID = " + steamId);
+			fetchAndCreateSteamUser(steamId, api);
+		}
+
+		// Make call to get MatchResults object
+		long detailId = match.getMatchId();
+		System.out.println(detailId + "MATCH ID");
 		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
 		request.setMatchId(detailId + "");
 		MatchDetail matchDetailResponse = (MatchDetail) api.execute(request);
 		MatchDetailResult matchResults = matchDetailResponse.getResult();
 
-		//WTF does this do again? 
-		for (MatchDetailPlayer playerResponse : matchDetailResponse.getResult()
-				.getPlayers()) {
-			playerResponse.setMatchDetailResult(matchResults);
-		}
-		
-		//Store Match Results into DB
-		session.beginTransaction();
-		try {
-			MatchDetailPlayer player = new MatchDetailPlayer();			
-			session.save(matchResults);
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			// e.printStackTrace();
-		} finally {
-			session.clear();
-		}
-		
-		//Store first Match Player from latest match into DB
-		session.beginTransaction();
-		try {
-			MatchDetailPlayer player = new MatchDetailPlayer();
-			player = matchResults.getPlayers().get(0);
-			session.save(player);
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			// e.printStackTrace();
-		} finally {
-			session.clear();
-		}
-		
+		// Sets matchResults for MatchDetailResults to access
+		// for (MatchDetailPlayer playerResponse : matchResults.getPlayers()) {
+		// playerResponse.setMatchDetailResult(matchResults);
+		//
+		// }
 
-		
+		// Store Match Results into DB
+		session.beginTransaction();
+		try {
+			// List<MatchDetailPlayer> players = new
+			// ArrayList<MatchDetailPlayer>();
+			// MatchDetailPlayer player = new MatchDetailPlayer();
+			// player.setMatchDetailResult(matchResults);
+			// players = matchResults.getPlayers();
+
+
+			for (MatchDetailPlayer playerResponse : matchResults.getPlayers()) {
+				fetchAndCreateSteamUser(playerResponse.getSteamId(), api);
+//				playerResponse.setMatchDetailResult(matchResults);
+//				session.saveOrUpdate(playerResponse);
+			}
+			
+			session.saveOrUpdate(matchResults);
+			
+			
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.clear();
+		}
+
+		// //Store first Match Player from latest match into DB
+		// session.beginTransaction();
+		// try {
+		// MatchDetailPlayer player = new MatchDetailPlayer();
+		// player = matchResults.getPlayers().get(0);
+		// session.save(player);
+		// session.getTransaction().commit();
+		// } catch (Exception e) {
+		// // e.printStackTrace();
+		// } finally {
+		// session.clear();
+		// }
+
 		api.close();
 		session.close();
+		HibernateUtil.shutdown();
 
 	}
 
@@ -137,5 +136,32 @@ public class Main {
 	// // HttpGet userNameGet = new
 	// HttpGet("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key="
 	// + steamKey + "&vanityurl=jdea");
+
+	private static void fetchAndCreateSteamUser(String steamId, SteamApi api) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		SteamPlayer playerSummary;
+
+		if (steamId == "0") {
+			playerSummary = new SteamPlayer();
+			playerSummary.setSteamId("0");
+		} else {
+			SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
+			request.setSteamId(steamId);
+			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
+					.execute(request);
+			playerSummary = playerSummaryResponse.getResponse().getPlayers()
+					.get(0);
+		}
+
+		session.beginTransaction();
+		try {
+			session.saveOrUpdate(playerSummary);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		} finally {
+			session.clear();
+		}
+	}
 
 }

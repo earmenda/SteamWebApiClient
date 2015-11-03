@@ -1,7 +1,18 @@
 package com.wilson.client.dota.response;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name = "match_detail_additional_units")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDetailAdditionalUnits {
 
 	private String unitName;
@@ -11,40 +22,56 @@ public class MatchDetailAdditionalUnits {
 	private int item3;
 	private int item4;
 	private int item5;
+	private int id;
 	
 	public MatchDetailAdditionalUnits(){
 	}
 	
 	//Getter
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	public int getId() {
+		return id;
+	}
+	
+	@Column(name = "unit_name")
 	public String getUnitName(){
 		return unitName;
 	}
+	@Column(name = "item0")
 	@JsonProperty("item_0")
 	public int getItem0(){
 		return item0;
 		}
+	@Column(name = "item1")
 	@JsonProperty("item_1")
 	public int getItem1(){
 		return item1;
 	}
+	@Column(name = "item2")
 	@JsonProperty("item_2")
 	public int getItem2(){
 		return item2;
 	}
+	@Column(name = "item3")
 	@JsonProperty("item_3")
 	public int getItem3(){
 		return item3;
 	}
+	@Column(name = "item4")
 	@JsonProperty("item_4")
 	public int getItem4(){
 		return item4;
 	}
+	@Column(name = "item5")
 	@JsonProperty("item_5")
 	public int getItem5(){
 		return item5;
 	}
 	
 	//Setter
+	@JsonProperty("unitname")
 	public void setUnitName(String unitName){
 		this.unitName = unitName;
 	}
@@ -72,4 +99,9 @@ public class MatchDetailAdditionalUnits {
 	public void setItem5(int item5){
 		this.item5 = item5;
 	}
+	@Column(name = "id")
+	public void setId(int id){
+		this.id = id;
+	}
+	
 }

@@ -2,15 +2,16 @@ package com.wilson.client.dota.response;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,8 +46,14 @@ public class MatchDetailResult {
 		
 	}
 	
+	public MatchDetailResult(Long matchId){
+		this.matchId = matchId;
+	}
+	
 	//Getter
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "matchDetailResult", cascade = CascadeType.SAVE_UPDATE)//WHY DOESNT THIS SHIT WORK
+	@OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id", referencedColumnName = "match_id")
+	@Cascade({CascadeType.ALL})
 	public List<MatchDetailPlayer> getPlayers(){
 		return players;
 	}
