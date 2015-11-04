@@ -18,6 +18,7 @@ public class MatchDetailAbilityUpgrades {
 	private int level;
 	private int id;
 	
+	
 	//Constructor 
 	public MatchDetailAbilityUpgrades(){
 		

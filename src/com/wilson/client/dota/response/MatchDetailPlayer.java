@@ -204,7 +204,7 @@ public class MatchDetailPlayer {
 
 	@JsonProperty("ability_upgrades")
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", referencedColumnName = "id")
+	@JoinColumn(name = "match_player_id", referencedColumnName = "id")
 	@Cascade({ CascadeType.ALL })
 	 public List<MatchDetailAbilityUpgrades> getAbilityUpgrades(){
 	 return abilityUpgrades;
@@ -212,7 +212,7 @@ public class MatchDetailPlayer {
 
 	@JsonProperty("additional_units")
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", referencedColumnName = "id")
+	@JoinColumn(name = "match_player_id", referencedColumnName = "id")
 	@Cascade({ CascadeType.ALL })
 	public List<MatchDetailAdditionalUnits> getAdditionalUnits() {
 		return additionalUnits;
@@ -222,6 +222,10 @@ public class MatchDetailPlayer {
 
 
 	@Column(name = "steam_id")
+	public void setSteamId(String steamId) {
+		this.steamId = steamId;
+	}
+	
 	@JsonProperty("account_id")
 	public void setSteamId(Long accountId) {
 		if (accountId == Long.parseLong("4294967295")) {

@@ -149,6 +149,7 @@ public class Main {
 			request.setSteamId(steamId);
 			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
 					.execute(request);
+
 			playerSummary = playerSummaryResponse.getResponse().getPlayers()
 					.get(0);
 		}
