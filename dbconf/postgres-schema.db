@@ -45,7 +45,7 @@ CREATE TABLE match_detail(
 CREATE TABLE match_detail_player(
 	id BIGSERIAL,
 	match_id INT,
-	steam_id INT,
+	steam_id VARCHAR(40),
 	accountid BIGINT,
 	player_slot INT,
 	hero_id INT,
@@ -103,11 +103,5 @@ CREATE TABLE ABILITY(
         hero_id INT,
         name VARCHAR(255),
         localized_name VARCHAR(255),
-        CONSTRAINT ability_pk PRIMARY KEY (id),
+        CONSTRAINT ability_pk PRIMARY KEY (id)
 );
-
-
-
-
-
-
