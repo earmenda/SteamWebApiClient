@@ -1,4 +1,4 @@
-package com.wilson.client;
+package com.wilson.data.client;
 
 import java.util.ArrayList;
 import java.util.List;

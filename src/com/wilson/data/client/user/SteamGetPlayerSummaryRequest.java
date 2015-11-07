@@ -1,4 +1,4 @@
-package com.wilson.client.user;
+package com.wilson.data.client.user;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.apache.http.NameValuePair;
 
-import com.wilson.client.UriUtils;
-import com.wilson.client.user.response.SteamPlayerSummary;
+import com.wilson.data.client.UriUtils;
+import com.wilson.data.client.user.response.SteamPlayerSummary;
 
 public class SteamGetPlayerSummaryRequest extends SteamInterfaceRequest {
 

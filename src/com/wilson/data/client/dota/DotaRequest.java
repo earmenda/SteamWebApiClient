@@ -1,6 +1,6 @@
-package com.wilson.client.dota;
+package com.wilson.data.client.dota;
 
-import com.wilson.client.user.SteamRequest;
+import com.wilson.data.client.user.SteamRequest;
 
 public abstract class DotaRequest implements SteamRequest {
 

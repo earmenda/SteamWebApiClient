@@ -1,4 +1,4 @@
-package com.wilson.client;
+package com.wilson.data.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,7 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wilson.client.user.SteamRequest;
+import com.wilson.data.client.user.SteamRequest;
 
 public class SteamApi {
 

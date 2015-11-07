@@ -1,4 +1,4 @@
-package com.wilson.shared;
+package com.wilson.data.shared;
 
 import java.util.List;
 

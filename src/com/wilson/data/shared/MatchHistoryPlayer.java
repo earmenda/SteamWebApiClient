@@ -1,4 +1,4 @@
-package com.wilson.client.dota.response;
+package com.wilson.data.shared;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

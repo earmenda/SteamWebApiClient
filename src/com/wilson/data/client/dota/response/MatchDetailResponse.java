@@ -1,10 +1,10 @@
-package com.wilson.client.dota.response;
+package com.wilson.data.client.dota.response;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import com.wilson.shared.MatchDetail;
+import com.wilson.data.shared.MatchDetail;
 
 
 

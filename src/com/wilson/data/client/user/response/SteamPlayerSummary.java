@@ -1,4 +1,4 @@
-package com.wilson.client.user.response;
+package com.wilson.data.client.user.response;
 
 
 public class SteamPlayerSummary {

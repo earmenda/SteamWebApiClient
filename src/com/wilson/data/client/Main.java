@@ -1,23 +1,23 @@
-package com.wilson.client;
+package com.wilson.data.client;
 
-import java.nio.channels.ShutdownChannelGroupException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 
-import com.wilson.client.dota.DotaGetMatchDetailsRequest;
-import com.wilson.client.dota.DotaGetMatchHistoryRequest;
-import com.wilson.client.dota.response.MatchDetailResponse;
-import com.wilson.client.dota.response.MatchHistoryResponse;
-import com.wilson.client.dota.response.MatchHistoryPlayer;
-import com.wilson.client.user.SteamGetPlayerSummaryRequest;
-import com.wilson.client.user.response.SteamPlayer;
-import com.wilson.client.user.response.SteamPlayerSummary;
-import com.wilson.persistence.HibernateUtil;
-import com.wilson.shared.MatchDetail;
-import com.wilson.shared.MatchDetailPlayer;
-import com.wilson.shared.MatchHistory;
+import com.wilson.data.client.dota.DotaGetMatchDetailsRequest;
+import com.wilson.data.client.dota.DotaGetMatchHistoryRequest;
+import com.wilson.data.client.dota.response.MatchDetailResponse;
+import com.wilson.data.client.dota.response.MatchHistoryResponse;
+import com.wilson.data.client.user.SteamGetPlayerSummaryRequest;
+import com.wilson.data.client.user.response.SteamPlayer;
+import com.wilson.data.client.user.response.SteamPlayerSummary;
+import com.wilson.data.persistence.HibernateUtil;
+import com.wilson.data.shared.MatchDetail;
+import com.wilson.data.shared.MatchDetailPlayer;
+import com.wilson.data.shared.MatchHistory;
+import com.wilson.data.shared.MatchHistoryPlayer;
 
 public class Main {
 
@@ -96,22 +96,21 @@ public class Main {
 			// player.setMatchDetailResult(matchResults);
 			// players = matchResults.getPlayers();
 
-
 			for (MatchDetailPlayer playerResponse : matchResults.getPlayers()) {
 				fetchAndCreateSteamUser(playerResponse.getSteamId(), api);
-//				playerResponse.setMatchDetailResult(matchResults);
-//				session.saveOrUpdate(playerResponse);
+				// playerResponse.setMatchDetailResult(matchResults);
+				// session.saveOrUpdate(playerResponse);
 			}
-			try{
-			
-			session.save(matchResults);
-			}
-			catch (Exception e) {
+			try {
+
+				session.save(matchResults);
+			} catch (ConstraintViolationException e) {
 				e.printStackTrace();
 			}
-			
+
 			session.getTransaction().commit();
 		} catch (Exception e) {
+			session.getTransaction().rollback();//rolls back previous queries if subsequent queries fail in one transaction...(this is to attempt to use same session)
 			e.printStackTrace();
 		} finally {
 			session.clear();

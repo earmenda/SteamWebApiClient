@@ -1,4 +1,4 @@
-package com.wilson.client.user;
+package com.wilson.data.client.user;
 
 public abstract class SteamInterfaceRequest implements SteamRequest {
 

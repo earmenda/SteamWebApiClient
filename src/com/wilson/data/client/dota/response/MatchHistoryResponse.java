@@ -1,4 +1,6 @@
-package com.wilson.client.dota.response;
+package com.wilson.data.client.dota.response;
+
+import com.wilson.data.shared.MatchHistoryResults;
 
 public class MatchHistoryResponse {
 	private MatchHistoryResults result;

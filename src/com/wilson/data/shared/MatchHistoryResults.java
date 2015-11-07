@@ -1,9 +1,8 @@
-package com.wilson.client.dota.response;
+package com.wilson.data.shared;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wilson.shared.MatchHistory;
 
 public class MatchHistoryResults {
 	private int status;
