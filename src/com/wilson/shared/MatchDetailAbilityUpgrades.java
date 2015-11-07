@@ -1,4 +1,4 @@
-package com.wilson.client.dota.response;
+package com.wilson.shared;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

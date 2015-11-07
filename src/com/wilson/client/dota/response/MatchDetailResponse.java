@@ -4,28 +4,30 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.wilson.shared.MatchDetail;
 
 
-public class MatchDetail implements java.io.Serializable{
 
-	private MatchDetailResult result;
+public class MatchDetailResponse implements java.io.Serializable{
+
+	private MatchDetail result;
 
 	
 	//constructor
-	public MatchDetail(){
+	public MatchDetailResponse(){
 		
 	}
 	
 	
 	//setter
-	public void setResult(MatchDetailResult result){
+	public void setResult(MatchDetail result){
 		this.result = result;
 	}
 	
 		
 	
 	//getter
-	public MatchDetailResult getResult(){
+	public MatchDetail getResult(){
 		return result;
 	}
 }

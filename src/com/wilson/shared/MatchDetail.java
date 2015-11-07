@@ -1,4 +1,4 @@
-package com.wilson.client.dota.response;
+package com.wilson.shared;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name = "match_detail")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MatchDetailResult {
+public class MatchDetail {
 	
 	private List<MatchDetailPlayer> players;
 	private boolean radiantWin;
@@ -42,11 +42,11 @@ public class MatchDetailResult {
 	private int engine;
 
 	//Constructor
-	public MatchDetailResult(){
+	public MatchDetail(){
 		
 	}
 	
-	public MatchDetailResult(Long matchId){
+	public MatchDetail(Long matchId){
 		this.matchId = matchId;
 	}
 	

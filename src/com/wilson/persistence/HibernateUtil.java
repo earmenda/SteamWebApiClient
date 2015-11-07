@@ -1,4 +1,4 @@
-package com.wilson.client;
+package com.wilson.persistence;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

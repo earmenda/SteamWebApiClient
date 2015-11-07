@@ -7,12 +7,12 @@ import java.util.Map;
 import org.apache.http.NameValuePair;
 
 import com.wilson.client.UriUtils;
-import com.wilson.client.dota.response.MatchHistory;
+import com.wilson.client.dota.response.MatchHistoryResponse;
 
 public class DotaGetMatchHistoryRequest extends DotaRequest{
 	private static final String STEAM_METHOD = "/GetMatchHistory";
 	private static final String STEAM_METHOD_VERSION = "/V001";
-	private static final Class RESPONSE_TYPE = MatchHistory.class;
+	private static final Class RESPONSE_TYPE = MatchHistoryResponse.class;
 	private Map<String, String> parameters;
 
 	public DotaGetMatchHistoryRequest() {
@@ -39,7 +39,7 @@ public class DotaGetMatchHistoryRequest extends DotaRequest{
 	}
 	
 	@Override
-	public Class<MatchHistory> getResponseType(){
+	public Class<MatchHistoryResponse> getResponseType(){
 		return RESPONSE_TYPE;
 	}
 	

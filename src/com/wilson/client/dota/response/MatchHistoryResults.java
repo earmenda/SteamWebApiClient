@@ -3,16 +3,17 @@ package com.wilson.client.dota.response;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wilson.shared.MatchHistory;
 
-public class MatchHistoryResult {
+public class MatchHistoryResults {
 	private int status;
 	private int numResults;
 	private int totalResults;
 	private int resultsRemaining;
-	private List<MatchHistoryMatch> matches;
+	private List<MatchHistory> matches;
 	
 	//constructor
-	MatchHistoryResult(){}
+	MatchHistoryResults(){}
 	
 	
 	//setter
@@ -33,7 +34,7 @@ public class MatchHistoryResult {
 		this.resultsRemaining = resultsRemaining;
 	}
 
-	public void setMatches(List<MatchHistoryMatch> matches){
+	public void setMatches(List<MatchHistory> matches){
 		this.matches = matches;
 		
 	}
@@ -59,7 +60,7 @@ public class MatchHistoryResult {
 		return resultsRemaining;
 	}
 
-	public List<MatchHistoryMatch> getMatches(){
+	public List<MatchHistory> getMatches(){
 		return matches;
 		
 	}

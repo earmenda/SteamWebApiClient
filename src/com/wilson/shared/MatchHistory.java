@@ -1,10 +1,11 @@
-package com.wilson.client.dota.response;
+package com.wilson.shared;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wilson.client.dota.response.MatchHistoryPlayer;
 
-public class MatchHistoryMatch {
+public class MatchHistory {
 	
 	
 	private Long matchId;
@@ -15,7 +16,7 @@ public class MatchHistoryMatch {
 	private int direTeamId;
 	private List<MatchHistoryPlayer> players;
 	
-	public MatchHistoryMatch(){
+	public MatchHistory(){
 		
 	}
 	

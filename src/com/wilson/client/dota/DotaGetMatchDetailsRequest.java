@@ -7,14 +7,14 @@ import java.util.Map;
 import org.apache.http.NameValuePair;
 
 import com.wilson.client.UriUtils;
-import com.wilson.client.dota.response.MatchDetail;
-import com.wilson.client.dota.response.MatchHistory;
+import com.wilson.client.dota.response.MatchDetailResponse;
+import com.wilson.client.dota.response.MatchHistoryResponse;
 
 public class DotaGetMatchDetailsRequest extends DotaRequest {
 
 	private static final String STEAM_METHOD = "/GetMatchDetails";
 	private static final String STEAM_METHOD_VERSION = "/V001";
-	private static final Class RESPONSE_TYPE = MatchDetail.class;
+	private static final Class RESPONSE_TYPE = MatchDetailResponse.class;
 	private Map<String, String> parameters;
 
 	public DotaGetMatchDetailsRequest() {
@@ -40,7 +40,7 @@ public class DotaGetMatchDetailsRequest extends DotaRequest {
 		parameters.put("match_id", matchId);
 	}
 	@Override
-	public Class<MatchDetail> getResponseType(){
+	public Class<MatchDetailResponse> getResponseType(){
 		return RESPONSE_TYPE;
 	}
 	

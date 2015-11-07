@@ -8,15 +8,16 @@ import org.hibernate.Session;
 
 import com.wilson.client.dota.DotaGetMatchDetailsRequest;
 import com.wilson.client.dota.DotaGetMatchHistoryRequest;
-import com.wilson.client.dota.response.MatchDetail;
-import com.wilson.client.dota.response.MatchDetailPlayer;
-import com.wilson.client.dota.response.MatchDetailResult;
-import com.wilson.client.dota.response.MatchHistory;
-import com.wilson.client.dota.response.MatchHistoryMatch;
+import com.wilson.client.dota.response.MatchDetailResponse;
+import com.wilson.client.dota.response.MatchHistoryResponse;
 import com.wilson.client.dota.response.MatchHistoryPlayer;
 import com.wilson.client.user.SteamGetPlayerSummaryRequest;
 import com.wilson.client.user.response.SteamPlayer;
 import com.wilson.client.user.response.SteamPlayerSummary;
+import com.wilson.persistence.HibernateUtil;
+import com.wilson.shared.MatchDetail;
+import com.wilson.shared.MatchDetailPlayer;
+import com.wilson.shared.MatchHistory;
 
 public class Main {
 
@@ -37,7 +38,7 @@ public class Main {
 		// request.setMatchId("1848756405");
 
 		SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
-		MatchHistory matchHistoryResponse = (MatchHistory) api
+		MatchHistoryResponse matchHistoryResponse = (MatchHistoryResponse) api
 				.execute(request1);
 		// SteamPlayerSummary playerSummaryResponse =
 		// (SteamPlayerSummary)api.execute(request);
@@ -52,7 +53,7 @@ public class Main {
 		// session.getTransaction().commit();
 
 		// Get Player Summary and store in DB
-		MatchHistoryMatch match = matchHistoryResponse.getResult().getMatches()
+		MatchHistory match = matchHistoryResponse.getResult().getMatches()
 				.get(0);
 		
 		for (MatchHistoryPlayer player : match.getPlayers()) {
@@ -74,8 +75,8 @@ public class Main {
 		System.out.println(detailId + "MATCH ID");
 		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
 		request.setMatchId(detailId + "");
-		MatchDetail matchDetailResponse = (MatchDetail) api.execute(request);
-		MatchDetailResult matchResults = matchDetailResponse.getResult();
+		MatchDetailResponse matchDetailResponse = (MatchDetailResponse) api.execute(request);
+		MatchDetail matchResults = matchDetailResponse.getResult();
 
 		// Sets matchResults for MatchDetailResults to access
 		// for (MatchDetailPlayer playerResponse : matchResults.getPlayers()) {
@@ -84,7 +85,10 @@ public class Main {
 		// }
 
 		// Store Match Results into DB
+		
+		
 		session.beginTransaction();
+		
 		try {
 			// List<MatchDetailPlayer> players = new
 			// ArrayList<MatchDetailPlayer>();
@@ -98,9 +102,13 @@ public class Main {
 //				playerResponse.setMatchDetailResult(matchResults);
 //				session.saveOrUpdate(playerResponse);
 			}
+			try{
 			
-			session.saveOrUpdate(matchResults);
-			
+			session.save(matchResults);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 			session.getTransaction().commit();
 		} catch (Exception e) {
