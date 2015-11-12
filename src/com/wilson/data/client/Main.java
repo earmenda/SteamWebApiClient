@@ -132,7 +132,20 @@ public class Main {
 		api.close();
 		session.close();
 		HibernateUtil.shutdown();
+		
+		MatchIdCache cache = MatchIdCache.getInstance();
+		cache.test = 0;
+		Runner runner = new Runner(cache);
 
+		Thread threadTest1 = new Thread(runner);
+		Thread threadTest2 = new Thread(runner);
+		System.out.println("reaaches here");
+
+		threadTest1.start();
+		threadTest2.start();
+		System.out.println("cachestart: " + cache.test);
+
+		
 	}
 
 	//
