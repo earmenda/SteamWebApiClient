@@ -1,14 +1,21 @@
 package com.wilson.data.client;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
+
+import com.wilson.data.persistence.HibernateUtil;
+import com.wilson.data.shared.MatchDetail;
 
 
 public class MatchIdCache {
-	private static MatchIdCache mCache;
-	private static Set<Long> matchIdCache;
-	protected int test;
 	
-	
+	private Set<Long> matchIdCache;
+		
 	private static MatchIdCache matchCache = new MatchIdCache();
 
 	private MatchIdCache() {
@@ -18,15 +25,39 @@ public class MatchIdCache {
 		return matchCache;
 	}
 
-     
-	protected static Set<Long> getMatchIdCache(){
-		return matchIdCache;
-	}
-
-	protected void setMatchIdCache(Set<Long> matchIdSet){
-		matchIdCache = matchIdSet;
+ 
+	
+	public synchronized boolean  checkMatchId(Long matchId){
+		return matchIdCache.contains(matchId);
 	}
 	
+	public synchronized void addMatchId(Long matchId){
+		this.matchIdCache.add(matchId);
+	}
 
-
+	
+	public synchronized void init() {
+		
+		if (matchIdCache == null) {
+			matchIdCache = new HashSet<Long>();
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			
+			List <MatchDetail> matchDetails= (List <MatchDetail>)session.createCriteria(MatchDetail.class)
+					.setProjection(
+							Projections.projectionList()
+									.add(Projections.property("matchId"),
+											"matchId"))
+					.setResultTransformer(
+							Transformers.aliasToBean(MatchDetail.class))
+							.list();
+			
+			for(MatchDetail matchDetail : matchDetails){
+				matchIdCache.add(matchDetail.getMatchId());
+				System.out.println(matchDetail.getMatchId());
+			}
+		}
+System.out.println("Match ID Cache size:" + matchIdCache.size());
+	}
 }
+
+

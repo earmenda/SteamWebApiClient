@@ -1,6 +1,7 @@
 package com.wilson.data.client.user.response;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,7 @@ public class SteamPlayer implements Serializable {
 		private String gameExtraInfo;
 		private String gameId;
 		private String locCountryCode;
+		private Timestamp lastUpdated; 
 		
 		public SteamPlayer() {
 		}
@@ -131,6 +133,11 @@ public class SteamPlayer implements Serializable {
 		public void setLocCountryCode(String locCountryCode) {
 			this.locCountryCode = locCountryCode;
 		}
+		@Column(name = "last_updated")
+		public void setLastUpdated(Timestamp lastUpdated) {
+			this.lastUpdated = lastUpdated;
+		}
+		
 		
 		
 		
@@ -211,6 +218,10 @@ public class SteamPlayer implements Serializable {
 		@JsonProperty("loccountrycode")
 		public String getLocCountryCode() {
 			return locCountryCode;
+		}
+		@Column(name = "last_updated")
+		public Timestamp getLastUpdated() {
+			return lastUpdated;
 		}
 
 		
