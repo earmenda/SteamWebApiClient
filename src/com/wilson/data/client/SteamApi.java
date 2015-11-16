@@ -39,7 +39,7 @@ public class SteamApi {
 		// HttpGet getRequest = new
 		// HttpGet("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key="
 		// + steamKey + "&steamids=" + steamId + "&format=json");
-		Object steamUser = null;
+		Object responseObject = null;
 		HttpGet getRequest = null;
 		Class responseType = request.getResponseType();
 		String response = null;
@@ -71,7 +71,7 @@ public class SteamApi {
 			response = EntityUtils.toString(entity);
 			ObjectMapper mapper = new ObjectMapper();
 //			MatchHistory MatchHistory = mapper.readValue(response, MatchHistory.class);
- 			steamUser = mapper.readValue(response, responseType);
+ 			responseObject = mapper.readValue(response, responseType);
 //			System.out.println(MatchHistory.getResult().getMatches().get(2));
 //			System.out.println(((MatchDetail) steamUser).getResult().getPlayers().get(2).getAdditionalUnits());
  			
@@ -92,7 +92,7 @@ public class SteamApi {
 		}
 		
 		//System.out.println(response);
-		return steamUser;
+		return responseObject;
 	}
 
 	public String getSteamKey() {

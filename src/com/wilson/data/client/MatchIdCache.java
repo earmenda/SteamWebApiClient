@@ -40,8 +40,8 @@ public class MatchIdCache {
 		
 		if (matchIdCache == null) {
 			matchIdCache = new HashSet<Long>();
-			Session session = HibernateUtil.getSessionFactory().openSession();
-			
+//			Session session = HibernateUtil.getSessionFactory().openSession();
+			Session session = Main.session.getSessionFactory().openSession();
 			List <MatchDetail> matchDetails= (List <MatchDetail>)session.createCriteria(MatchDetail.class)
 					.setProjection(
 							Projections.projectionList()
@@ -53,11 +53,14 @@ public class MatchIdCache {
 			
 			for(MatchDetail matchDetail : matchDetails){
 				matchIdCache.add(matchDetail.getMatchId());
-				System.out.println(matchDetail.getMatchId());
 			}
-		}
-System.out.println("Match ID Cache size:" + matchIdCache.size());
+
+			session.close();
+//			HibernateUtil.shutdown();
+
+			System.out.println("Match ID Cache size:" + matchIdCache.size());
 	}
+}
 }
 
 

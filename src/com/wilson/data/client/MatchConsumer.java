@@ -25,8 +25,9 @@ public class MatchConsumer implements Runnable{
 	
 
 	public void run() {
-		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryPoll"));
-		
+		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchConsumer"));
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
 		try{
 		SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
 		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
@@ -34,12 +35,10 @@ public class MatchConsumer implements Runnable{
 		MatchDetailResponse matchDetailResponse = (MatchDetailResponse) api
 				.execute(request);
 		MatchDetail matchResults = matchDetailResponse.getResult();
-		Session session = HibernateUtil.getSessionFactory().openSession();
 		List < Future> futures = new ArrayList<Future>();
 		for (MatchDetailPlayer player : matchResults.getPlayers()){
 			String steamId = player.getSteamId() + "";
 			if(!PlayerIdCache.getInstance().checkPlayerId(steamId)){
-				System.out.println(steamId);
 				futures.add(taskExecutor.submit(new PlayerConsumer(steamId, api)));
 				
 			}
@@ -65,6 +64,10 @@ public class MatchConsumer implements Runnable{
 		catch(Exception e){
 			e.printStackTrace();
 		}
-
+		finally{
+			System.out.println("MatchConsumerEnd");
+		}
+		taskExecutor.shutdown();
+		System.out.println("Shutdown");
 	}
 }

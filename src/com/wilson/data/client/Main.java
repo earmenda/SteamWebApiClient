@@ -20,6 +20,7 @@ import com.wilson.data.shared.MatchHistory;
 import com.wilson.data.shared.MatchHistoryPlayer;
 
 public class Main {
+	public static Session session = HibernateUtil.getSessionFactory().openSession();
 
 	public static void main(String[] args) throws Exception {
 
@@ -80,14 +81,15 @@ public class Main {
 //		api.close();
 //		session.close();
 		
-		PlayerIdCache cache = PlayerIdCache.getInstance();
-		cache.init();
+		PlayerIdCache.getInstance().init();
 		MatchIdCache.getInstance().init();
 		MatchHistoryPoll runner = new MatchHistoryPoll();
 		
-		Thread threadTest1 = new Thread(runner);
-
-		threadTest1.start();
+		runner.run();
+		
+//		Thread threadTest1 = new Thread(runner);
+//
+//		threadTest1.start();
 
 
 

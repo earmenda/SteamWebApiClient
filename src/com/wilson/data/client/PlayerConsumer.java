@@ -19,7 +19,8 @@ public class PlayerConsumer implements Runnable {
 		public void run(){
 		
 
-		Session session = HibernateUtil.getSessionFactory().openSession();
+//		Session session = HibernateUtil.getSessionFactory().openSession();
+			Session session = Main.session.getSessionFactory().openSession();
 
 		SteamPlayer playerSummary;
 		if (steamId == "0") {
@@ -30,9 +31,9 @@ public class PlayerConsumer implements Runnable {
 			request.setSteamId(steamId);
 			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
 					.execute(request);
-			System.out.println(steamId);
+			
 			playerSummary = playerSummaryResponse.getResponse().getPlayers().get(0);
-
+			System.out.println("PlayerSummary = " + playerSummary.getPersonaName());
 		}
 
 		session.beginTransaction();
@@ -44,5 +45,6 @@ public class PlayerConsumer implements Runnable {
 		} finally {
 			session.clear();
 		}
+		session.close();
 		}
 }

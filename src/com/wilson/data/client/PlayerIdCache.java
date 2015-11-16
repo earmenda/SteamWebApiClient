@@ -53,8 +53,9 @@ public class PlayerIdCache {
 			
 			for(SteamPlayer PlayerDetail : PlayerDetails){
 				playerIdCache.add(PlayerDetail.getSteamId());
-				System.out.println(PlayerDetail.getSteamId());
 			}
+			session.close();
+//			HibernateUtil.shutdown();
 		}
 
 	}
