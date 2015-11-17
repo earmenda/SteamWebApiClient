@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Entity
+
 @Table(name = "player_summary")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SteamPlayer implements Serializable {
@@ -47,6 +48,8 @@ public class SteamPlayer implements Serializable {
 		public String getSteamId() {
 			return steamId;
 		}
+
+		
 		@Column(name = "community_visibility_state")
 		@JsonProperty("communityvisibilitystate")
 		public int getCommunityVisibilityState(){
@@ -142,6 +145,7 @@ public class SteamPlayer implements Serializable {
 		
 		
 		//Setters
+
 		@JsonProperty("steamid")
 		public void setSteamId(String steamId ){
 			this.steamId = steamId;
@@ -219,7 +223,7 @@ public class SteamPlayer implements Serializable {
 		public String getLocCountryCode() {
 			return locCountryCode;
 		}
-		@Column(name = "last_updated")
+		@Column(name = "last_updated", insertable = false, updatable = false)
 		public Timestamp getLastUpdated() {
 			return lastUpdated;
 		}

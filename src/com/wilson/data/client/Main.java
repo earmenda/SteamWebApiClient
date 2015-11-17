@@ -83,12 +83,15 @@ public class Main {
 		
 		PlayerIdCache.getInstance().init();
 		MatchIdCache.getInstance().init();
-		
+		MatchHistoryPoll runner = new MatchHistoryPoll();
 		PlayerPopulationPoll playerRunner = new PlayerPopulationPoll();
-		Thread threadTest = new Thread(playerRunner);
-		threadTest.start();
-//		MatchHistoryPoll runner = new MatchHistoryPoll();
+		Thread playerPopTest = new Thread(playerRunner);
 		
+		Thread matchTest = new Thread(runner);
+		matchTest.start();
+		playerPopTest.start();
+
+//		
 //		runner.run();
 		
 //		Thread threadTest1 = new Thread(runner);
