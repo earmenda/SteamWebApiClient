@@ -34,10 +34,9 @@ public class MatchHistoryPoll implements Runnable {
 				List <MatchHistory> matches = matchHistoryResponse.getResult().getMatches();
 				for (MatchHistory match : matches){
 					if (!MatchIdCache.getInstance().checkMatchId(match.getMatchId())){
-				
+						
 						futures.add(taskExecutor.submit(new MatchConsumer(match.getMatchId())));
 						
-						System.out.println("Still waiting?");
 					}
 
 				}
@@ -56,7 +55,9 @@ public class MatchHistoryPoll implements Runnable {
 //                }
 //				break;
 				//make sure jobs (db storages, cache updates) are done then re loop
-				Thread.currentThread().interrupt();
+//				Thread.currentThread().interrupt();
+				System.out.println("========================================================================");
+				Thread.sleep(30000);
 			}
 		}catch(InterruptedException e1){
 			taskExecutor.shutdown();

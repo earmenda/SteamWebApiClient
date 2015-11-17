@@ -16,35 +16,53 @@ public class PlayerConsumer implements Runnable {
 			this.api = api;
 		}
 		
-		public void run(){
-		
+	public void run() {
 
-//		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			// Session session =
+			// HibernateUtil.getSessionFactory().openSession();
 			Session session = Main.session.getSessionFactory().openSession();
 
-		SteamPlayer playerSummary;
-		if (steamId == "0") {
-			playerSummary = new SteamPlayer();
-			playerSummary.setSteamId("0");
-		} else {
-			SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
-			request.setSteamId(steamId);
-			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
-					.execute(request);
-			
-			playerSummary = playerSummaryResponse.getResponse().getPlayers().get(0);
-			System.out.println("PlayerSummary = " + playerSummary.getPersonaName());
-		}
+			SteamPlayer playerSummary;
+			if (steamId.equals("0")) {
+				playerSummary = new SteamPlayer();
+				playerSummary.setSteamId("0");
+			}else if (steamId.equals("Bot")){
+				playerSummary = new SteamPlayer();
+				playerSummary.setSteamId("Bot");
+			}
+			else {
+				SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
+				request.setSteamId(steamId);
+				SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
+						.execute(request);
+				try{
+				playerSummary = playerSummaryResponse.getResponse()
+						.getPlayers().get(0);
+				}
+				catch(IndexOutOfBoundsException e){
+					System.out.println("Could not find player with Id of " + steamId);
+					throw e;
+				}
+				System.out.println("PlayerSummary = "
+						+ playerSummary.getPersonaName());
+			}
 
-		session.beginTransaction();
-		try {
-			session.saveOrUpdate(playerSummary);
-			session.getTransaction().commit();
+			session.beginTransaction();
+			try {
+				session.saveOrUpdate(playerSummary);
+				session.getTransaction().commit();
+				PlayerIdCache.getInstance().addPlayerId(steamId);
+
+			} catch (Exception e) {
+				// e.printStackTrace();
+			} finally {
+				session.clear();
+			}
+			session.close();
+
 		} catch (Exception e) {
-			// e.printStackTrace();
-		} finally {
-			session.clear();
+			e.printStackTrace();
 		}
-		session.close();
-		}
+	}
 }

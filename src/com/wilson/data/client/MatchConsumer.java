@@ -37,7 +37,19 @@ public class MatchConsumer implements Runnable{
 		MatchDetail matchResults = matchDetailResponse.getResult();
 		List < Future> futures = new ArrayList<Future>();
 		for (MatchDetailPlayer player : matchResults.getPlayers()){
+			try{
+			if (player.getSteamId() == null){
+				System.out.println("Match ID of null steamId: " + matchId);
+			}
+			}catch(Exception e){
+				e.printStackTrace();
+				throw e;
+			}
+			
 			String steamId = player.getSteamId() + "";
+
+
+
 			if(!PlayerIdCache.getInstance().checkPlayerId(steamId)){
 				futures.add(taskExecutor.submit(new PlayerConsumer(steamId, api)));
 				
@@ -52,11 +64,14 @@ public class MatchConsumer implements Runnable{
 
 		try {
 			session.save(matchResults);
+			session.getTransaction().commit();
+			MatchIdCache.getInstance().addMatchId(matchId);
+			System.out.println("MatchId = " + matchId);
 		} catch (ConstraintViolationException e) {
 			e.printStackTrace();
 		}
 
-		session.getTransaction().commit();
+
 
 		api.close();
 		session.close();
@@ -65,9 +80,7 @@ public class MatchConsumer implements Runnable{
 			e.printStackTrace();
 		}
 		finally{
-			System.out.println("MatchConsumerEnd");
 		}
 		taskExecutor.shutdown();
-		System.out.println("Shutdown");
 	}
 }

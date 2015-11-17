@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table(name = "match_detail_player")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchDetailPlayer {
-	private String steamId; // accountid
+	private String steamId = "Bot"; // accountid
 	private int playerSlot;
 	private int heroId;
 	private int item0;
@@ -49,6 +49,7 @@ public class MatchDetailPlayer {
 	private int id;
 	private List<MatchDetailAbilityUpgrades> abilityUpgrades;
 	private List<MatchDetailAdditionalUnits> additionalUnits;
+	
 
 	// Constructor
 	public MatchDetailPlayer() {
