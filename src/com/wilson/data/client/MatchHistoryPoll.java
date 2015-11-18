@@ -1,30 +1,25 @@
 package com.wilson.data.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import com.wilson.data.client.dota.DotaGetMatchHistoryRequest;
-import com.wilson.data.client.dota.response.MatchHistoryResponse;
-import com.wilson.data.persistence.HibernateUtil;
-import com.wilson.data.shared.MatchHistory;
 
 public class MatchHistoryPoll implements Runnable {
 	
 	private Future task;
 	public MatchHistoryPoll(){};
+	private static final int FREQUENCY_IN_SECONDS = 10;
 
 	
 	public void run() {
+		ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("MatchHistoryPoll"), new ThreadPoolExecutor.DiscardPolicy());
+        task = taskExecutor.scheduleAtFixedRate(new MatchHistoryConsumer(4), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
+
+
 		
 		
-		MatchHistoryConsumer mHConsumer = new MatchHistoryConsumer();
-		Thread matchHistoryPoll = new Thread(mHConsumer);
-		matchHistoryPoll.start();
-		
+
 	}
 //		SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
 //		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryPoll"));

@@ -1,8 +1,8 @@
 CREATE TABLE player_summary	(
-	steam_id VARCHAR(40) NOT NULL,
+	steam_id VARCHAR(255) NOT NULL,
 	community_visibility_state INTEGER NOT NULL,
 	profile_state INT,
-	persona_name VARCHAR(40),
+	persona_name VARCHAR(255),
 	last_logoff BIGINT,
 	comment_permission INT,
 	profile_url VARCHAR(255),
@@ -11,12 +11,13 @@ CREATE TABLE player_summary	(
 	avatar_full VARCHAR(255),
 	persona_state INTEGER,
 	real_name VARCHAR,
-	primary_clan_id VARCHAR(40),
+	primary_clan_id VARCHAR(255),
 	time_created BIGINT,
 	persona_state_flags INT,
-	game_extra_info VARCHAR(40),
-	game_id VARCHAR(40),
+	game_extra_info VARCHAR(255),
+	game_id VARCHAR(255),
 	loc_country_code VARCHAR,
+	last_updated timestamp,
 	CONSTRAINT player_summary_pk PRIMARY KEY (STEAM_ID)
 );
 
@@ -45,7 +46,7 @@ CREATE TABLE match_detail(
 CREATE TABLE match_detail_player(
 	id BIGSERIAL,
 	match_id INT,
-	steam_id VARCHAR(40),
+	steam_id VARCHAR(255),
 	accountid BIGINT,
 	player_slot INT,
 	hero_id INT,
@@ -87,7 +88,7 @@ CREATE TABLE match_detail_player_ability(
 CREATE TABLE match_detail_additional_units(
 	id BIGSERIAL,
 	match_player_id BIGINT,
-	unit_name VARCHAR(40),
+	unit_name VARCHAR(255),
 	item0 INT,
 	item1 INT, 
 	item2 INT,

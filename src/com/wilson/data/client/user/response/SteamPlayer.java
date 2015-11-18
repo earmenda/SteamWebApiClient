@@ -223,7 +223,7 @@ public class SteamPlayer implements Serializable {
 		public String getLocCountryCode() {
 			return locCountryCode;
 		}
-		@Column(name = "last_updated", insertable = false, updatable = false)
+		@Column(name = "last_updated")
 		public Timestamp getLastUpdated() {
 			return lastUpdated;
 		}

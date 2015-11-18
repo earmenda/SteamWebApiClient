@@ -68,7 +68,8 @@ public class MatchConsumer implements Runnable{
 			MatchIdCache.getInstance().addMatchId(matchId);
 			System.out.println("MatchId = " + matchId);
 		} catch (ConstraintViolationException e) {
-			e.printStackTrace();
+			System.out.println("FAILED TO INSERT MATCH ID " +this.matchId);
+			e.printStackTrace(); 
 		}
 
 
@@ -84,3 +85,4 @@ public class MatchConsumer implements Runnable{
 		taskExecutor.shutdown();
 	}
 }
+
