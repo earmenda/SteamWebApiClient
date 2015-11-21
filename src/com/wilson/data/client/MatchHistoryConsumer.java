@@ -44,7 +44,7 @@ public class MatchHistoryConsumer implements Runnable {
 
 	public void run(){
 
-		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchConsumer"));
+		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryConsumer-MatchConsumer"));
 
 		try {
 //			while (true) {
