@@ -9,12 +9,12 @@ public class MatchHistoryPoll implements Runnable {
 	
 	private Future task;
 	public MatchHistoryPoll(){};
-	private static final int FREQUENCY_IN_SECONDS = 10;
+	private static final int FREQUENCY_IN_SECONDS = 300;
 
 	
 	public void run() {
 		ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("MatchHistoryPoll"), new ThreadPoolExecutor.DiscardPolicy());
-        task = taskExecutor.scheduleAtFixedRate(new MatchHistoryConsumer(4), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
+        task = taskExecutor.scheduleAtFixedRate(new MatchHistoryConsumer(2), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
 
 
 		

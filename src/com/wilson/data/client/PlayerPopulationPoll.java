@@ -34,7 +34,7 @@ public class PlayerPopulationPoll implements Runnable {
 	}
 
 	public void run(){
-		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(6	, 6, 0L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>(), new CustomThreadFactory("PopulationPlayerPoll"));
+		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(2	, 2, 0L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>(), new CustomThreadFactory("PopulationPlayerPoll"));
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 			try{
@@ -66,7 +66,7 @@ public class PlayerPopulationPoll implements Runnable {
 				List <SteamPlayer> workingList = new ArrayList<SteamPlayer>();
 				for (SteamPlayer steamPlayer : criteriaList){
 	
-					MatchHistoryConsumer mH1 = new MatchHistoryConsumer(4);
+					MatchHistoryConsumer mH1 = new MatchHistoryConsumer(2);
 					mH1.setSteamId(steamPlayer.getSteamId());
 	//				taskExecutor.submit(mH1);
 					CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(mH1, taskExecutor);
@@ -89,7 +89,7 @@ public class PlayerPopulationPoll implements Runnable {
 				catch(Exception e){
 					e.printStackTrace();
 				} finally{
-					Thread.sleep(30000);
+					Thread.sleep(60000);
 				}
 				
 				

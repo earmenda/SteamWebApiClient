@@ -74,8 +74,8 @@ public class MatchHistoryConsumer implements Runnable {
 					
 					if(accountId != null){
 						Session session = HibernateUtil.getSessionFactory().openSession();
-						SteamPlayer mergeUser = new SteamPlayer();
-						mergeUser.setSteamId( (Long.parseLong(accountId) + 76561197960265728L) +""); 
+//						SteamPlayer mergeUser = new SteamPlayer();
+						SteamPlayer mergeUser = session.load(SteamPlayer.class, (Long.parseLong(accountId) + 76561197960265728L + ""));
 						mergeUser.setLastUpdated(new Timestamp(System.currentTimeMillis()));
 						session.beginTransaction();
 						session.update(mergeUser);
