@@ -46,7 +46,7 @@ public class MatchDetailPlayer {
 	private int towerDamage;
 	private int heroHealing;
 	private int level;
-	private int id;
+	private Long id;
 	private List<MatchDetailAbilityUpgrades> abilityUpgrades;
 	private List<MatchDetailAdditionalUnits> additionalUnits;
 	
@@ -199,7 +199,7 @@ public class MatchDetailPlayer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -364,7 +364,7 @@ public class MatchDetailPlayer {
 	}
 
 	@Column(name = "id")
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

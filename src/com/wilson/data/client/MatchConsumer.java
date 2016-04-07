@@ -42,7 +42,7 @@ public class MatchConsumer implements Runnable{
 		MatchDetailResponse matchDetailResponse = (MatchDetailResponse) api
 				.execute(request);
 		MatchDetail matchResults = matchDetailResponse.getResult();
-		List < Future> futures = new ArrayList<Future>();
+		List <Future> futures = new ArrayList<Future>();
 		for (MatchDetailPlayer player : matchResults.getPlayers()){
 			try{
 			if (player.getSteamId() == null){

@@ -16,11 +16,11 @@ import com.wilson.data.client.user.SteamRequest;
 
 public class SteamApi {
 
-	private String steamKey;
-	private static String apiUrl = "api.steampowered.com";
-	private static String apiProtocol = "http";
-	private HttpClient client;
-	private HttpEntity entity;
+	protected String steamKey;
+	protected static String apiUrl = "api.steampowered.com";
+	protected static String apiProtocol = "http";
+	protected HttpClient client;
+	protected HttpEntity entity;
 
 
 	public SteamApi(String steamKey) {

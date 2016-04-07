@@ -39,6 +39,9 @@ public class SteamGetPlayerSummaryRequest extends SteamInterfaceRequest {
 	public void setSteamId(String steamId) {
 		parameters.put("steamids", steamId);
 	}
+	public void setSteamParameters(Map<String,String> steamParameters){
+		this.parameters = steamParameters;
+	}
 	@Override
 	public Class<SteamPlayerSummary> getResponseType(){
 		return RESPONSE_TYPE;
