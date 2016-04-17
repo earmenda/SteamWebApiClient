@@ -51,6 +51,7 @@ public class MatchHistoryConsumer implements Runnable {
 				try {
 					checkInterruptedStatus();
 					DotaGetMatchHistoryRequest request = new DotaGetMatchHistoryRequest();
+					System.out.println(accountId);
 					request.setAccountId(accountId);
 					MatchHistoryResponse matchHistoryResponse = (MatchHistoryResponse) api
 							.execute(request);
@@ -96,7 +97,7 @@ public class MatchHistoryConsumer implements Runnable {
 			api.close();
 			taskExecutor.shutdown();
 			System.out.println("MatchHistoryPoll Task executor shutdown");
-			System.out.println("MatchHistoryConsumer");
+
 		}
 	}
 

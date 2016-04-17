@@ -1,23 +1,9 @@
 package com.wilson.data.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 
-import com.wilson.data.client.dota.DotaGetMatchDetailsRequest;
-import com.wilson.data.client.dota.DotaGetMatchHistoryRequest;
-import com.wilson.data.client.dota.response.MatchDetailResponse;
-import com.wilson.data.client.dota.response.MatchHistoryResponse;
-import com.wilson.data.client.user.SteamGetPlayerSummaryRequest;
-import com.wilson.data.client.user.response.SteamPlayer;
-import com.wilson.data.client.user.response.SteamPlayerSummary;
 import com.wilson.data.persistence.HibernateUtil;
-import com.wilson.data.shared.MatchDetail;
-import com.wilson.data.shared.MatchDetailPlayer;
-import com.wilson.data.shared.MatchHistory;
-import com.wilson.data.shared.MatchHistoryPlayer;
+import com.wilson.dota.server.QueryTest;
 
 public class Main {
 	public static Session session = HibernateUtil.getSessionFactory().openSession();
@@ -80,27 +66,21 @@ public class Main {
 //
 //		api.close();
 //		session.close();
-		
-		PlayerIdCache.getInstance().init();
-		MatchIdCache.getInstance().init();
-		MatchHistoryPoll runner = new MatchHistoryPoll();
-		PlayerPopulationPoll playerRunner = new PlayerPopulationPoll();
-		Thread playerPopTest = new Thread(playerRunner);
-		
-		Thread matchTest = new Thread(runner);
-		matchTest.start();
-		playerPopTest.start();
+		QueryTest a = new QueryTest();
+		a.query();
 
+		
+//		PlayerIdCache.getInstance().init();
+//		MatchIdCache.getInstance().init();
+//		MatchHistoryPoll runner = new MatchHistoryPoll();
+//		PlayerPopulationPoll playerRunner = new PlayerPopulationPoll();
+//		Thread playerPopTest = new Thread(playerRunner);
 //		
-//		runner.run();
-		
-//		Thread threadTest1 = new Thread(runner);
-//
-//		threadTest1.start();
+//		Thread matchTest = new Thread(runner);
+//		matchTest.start();
+//		playerPopTest.start();
 
 
-
-//    	HibernateUtil.shutdown();
 
 	}
 

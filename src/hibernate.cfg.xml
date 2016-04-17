@@ -16,6 +16,8 @@
     <mapping class="com.wilson.data.shared.MatchDetailPlayer" />
     <mapping class="com.wilson.data.shared.MatchDetailAdditionalUnits" />
     <mapping class="com.wilson.data.shared.MatchDetailAbilityUpgrades" />
+    <mapping class="com.wilson.dota.server.QueryModel"/>
+    
 </session-factory>
 
 </hibernate-configuration>
