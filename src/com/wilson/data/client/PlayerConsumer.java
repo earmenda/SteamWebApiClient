@@ -1,5 +1,8 @@
 package com.wilson.data.client;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.hibernate.Session;
@@ -10,87 +13,118 @@ import com.wilson.data.client.user.response.SteamPlayerSummary;
 import com.wilson.data.persistence.HibernateUtil;
 
 public class PlayerConsumer implements Callable {
-		String steamId;
-		SteamApi api;
-		
-		public PlayerConsumer(String steamId, SteamApi api){
-			this.steamId = steamId;
-			this.api = api;
+	SteamApi api;
+	List<PlayerConsumerStatus> playerConsumerStatusList;
+	SteamGetPlayerSummaryRequest request;
+
+	// public PlayerConsumer(String steamId, SteamApi api){
+	// this.steamId = steamId;
+	// this.api = api;
+	// }
+
+	public PlayerConsumer(List<PlayerConsumerStatus> playerConsumerStatusList) {
+		this.playerConsumerStatusList = playerConsumerStatusList;
+	}
+
+	public List<PlayerConsumerStatus> call() {
+		Set<String> steamIds = new HashSet<String>();
+
+		for (PlayerConsumerStatus status : playerConsumerStatusList) {
+			if (!PlayerIdCache.getInstance().checkPlayerId(status.getSteamId())) {
+
+				steamIds.add(status.getSteamId());
+			}
+
+			// list of playerConsumerstatus
+
 		}
-		
-		
-	public PlayerConsumerStatus call() {
-		Session session = null;
+
 		try {
-			// Session session =
-			// HibernateUtil.getSessionFactory().openSession();
-			session = Main.session.getSessionFactory().openSession();
-			SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
+			SteamApi api = new SteamApi(SteamKeys.getSteamKey());
+			request = new SteamGetPlayerSummaryRequest();
+			request.setSteamIds(steamIds);
 
-			SteamPlayer playerSummary;
-			if (steamId.equals("0")) {
-				playerSummary = new SteamPlayer();
-				playerSummary.setSteamId("0");
-			}else if (steamId.equals("Bot")){
-				playerSummary = new SteamPlayer();
-				playerSummary.setSteamId("Bot");
-			}
-			else {
-				SteamGetPlayerSummaryRequest request = new SteamGetPlayerSummaryRequest();
-				request.setSteamId(steamId);
-				SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
-						.execute(request);
-				try{
-				playerSummary = playerSummaryResponse.getResponse()
-						.getPlayers().get(0);
+			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
+					.execute(request);
+
+			for (SteamPlayer player : playerSummaryResponse.getResponse()
+					.getPlayers()) {
+				Session session = null;
+				try {
+					session = HibernateUtil.getSessionFactory().openSession();
+
+					System.out.println("PlayerSummary = "
+							+ player.getPersonaName() + " Player Steam ID: "
+							+ player.getSteamId());
+					session.beginTransaction();
+					session.saveOrUpdate(player);
+					session.getTransaction().commit();
+					PlayerIdCache.getInstance()
+							.addPlayerId(player.getSteamId());
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+
+					if (session != null) {
+						session.close();
+					}
+
 				}
-				catch(IndexOutOfBoundsException e){
-					System.out.println("Could not find player with Id of " + steamId);
-					throw e;
-				}
-				System.out.println("PlayerSummary = "
-						+ playerSummary.getPersonaName() + " Player Steam ID: " +playerSummary.getSteamId());
 			}
 
-			session.beginTransaction();
+			for (PlayerConsumerStatus status : playerConsumerStatusList) {
+				status.setSuccess(PlayerIdCache.getInstance().checkPlayerId(
+						status.getSteamId()));
+			}
 
-			session.saveOrUpdate(playerSummary);
-			session.getTransaction().commit();
-			PlayerIdCache.getInstance().addPlayerId(steamId);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
-			 return new PlayerConsumerStatus(steamId, false);
 
 		}
-		finally{
-			if (session != null){
-			session.close();
-			}
-		}
-		return new PlayerConsumerStatus(steamId, true);
+		return playerConsumerStatusList;
 	}
-	
-	class PlayerConsumerStatus{
+
+	public static class PlayerConsumerStatus {
 		private String steamId;
 		private boolean success;
-		public PlayerConsumerStatus(String steamId, boolean success){
+		private Long matchId;
+
+		public PlayerConsumerStatus(String steamId, Long matchId,
+				boolean success) {
 			this.steamId = steamId;
 			this.success = success;
+			this.matchId = matchId;
+		}
+
+		public PlayerConsumerStatus(String steamId, Long matchId) {
+			this.steamId = steamId;
+			this.matchId = matchId;
 		}
 
 		public String getSteamId() {
 			return steamId;
 		}
+
 		public void setSteamId(String steamId) {
 			this.steamId = steamId;
 		}
+
 		public boolean isSuccess() {
 			return success;
 		}
+
 		public void setSuccess(boolean success) {
 			this.success = success;
 		}
-		
+
+		public Long getMatchId() {
+			return matchId;
+		}
+
+		public void setMatchId(Long matchId) {
+			this.matchId = matchId;
+		}
+
 	}
 }

@@ -21,8 +21,10 @@ public class MatchHistoryConsumer implements Runnable {
 	private Future task;
 	private int threadCount;
 	List<Future> futures = new ArrayList<Future>();
-	SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
+	SteamApi api = new SteamApi(SteamKeys.getSteamKey());
 
+	
+	
 	public void setAccountId(String accountId) {
 
 		this.accountId = accountId;
@@ -41,7 +43,15 @@ public class MatchHistoryConsumer implements Runnable {
 		}
 
 	}
-
+	
+	
+    /**
+     * Creates a new TaskExecutor 
+     * Sends a Match History request with optional accountId (option currently exercised by PlayerPopulationPoll)
+     * If Match is not in MatchIdCache, submit new Match Consumer for each Match in MatchHistory
+     * If accountId (steamId) was set, update the lastUpdated column in playerSummary
+     */
+	
 	public void run(){
 
 		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryConsumer-MatchConsumer"));
@@ -49,31 +59,31 @@ public class MatchHistoryConsumer implements Runnable {
 		try {
 //			while (true) {
 				try {
-					checkInterruptedStatus();
+					checkInterruptedStatus();  
 					DotaGetMatchHistoryRequest request = new DotaGetMatchHistoryRequest();
-					System.out.println(accountId);
-					request.setAccountId(accountId);
+					System.out.println(accountId); 
+					request.setAccountId(accountId);     //Set the account Id if this is for a player's history
 					MatchHistoryResponse matchHistoryResponse = (MatchHistoryResponse) api
 							.execute(request);
 					List<MatchHistory> matches = matchHistoryResponse
-							.getResult().getMatches();
+							.getResult().getMatches();    //Return list of matches
 					for (MatchHistory match : matches) {
-						if (!MatchIdCache.getInstance().checkMatchId(
-								match.getMatchId())) {
+						if (!MatchIdCache.getInstance().checkMatchId( //Check if Match exists in the MatchIdCache
+								match.getMatchId())) {  
 
-							futures.add(taskExecutor.submit(new MatchConsumer(
+							futures.add(taskExecutor.submit(new MatchConsumer( //Consume matches 
 									match.getMatchId())));
 
 						}
 
 					}
 					for (Future future : futures) {
-						//check that all matches consumed succcessfully 
-						future.get();
+						future.get(); 						//check that all matches consumed succcessfully 
+
 
 					}
 					
-					if(accountId != null){
+					if(accountId != null){       //If accountId (steamId) was set, we need to set the lastUpdated timestamp in the db for the player
 						Session session = HibernateUtil.getSessionFactory().openSession();
 //						SteamPlayer mergeUser = new SteamPlayer();
 						SteamPlayer mergeUser = session.load(SteamPlayer.class, (Long.parseLong(accountId) + 76561197960265728L + ""));

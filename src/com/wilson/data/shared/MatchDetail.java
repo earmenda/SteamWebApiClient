@@ -14,6 +14,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -40,6 +42,8 @@ public class MatchDetail {
 	private int negativeVotes;
 	private int gameMode;
 	private int engine;
+	private String error;
+	private Boolean practiceMatch;
 
 	//Constructor
 	public MatchDetail(){
@@ -146,6 +150,11 @@ public class MatchDetail {
 	public int getEngine(){
 		return engine;
 	}
+	@Column(name = "error")
+	@JsonProperty("error")
+	public String getError(){
+		return error;
+	}
 	//Setter
 	public void setPlayers(List<MatchDetailPlayer> players){
 		this.players = players;
@@ -237,6 +246,14 @@ public class MatchDetail {
 	public void setEngine(int engine){
 		this.engine = engine;
 		
+		
+	}
+	@JsonProperty("error")
+	public void setError(String error){
+		this.error = error;
+
+
+
 	}
 	
 }

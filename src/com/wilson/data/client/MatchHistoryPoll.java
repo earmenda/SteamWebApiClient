@@ -12,6 +12,13 @@ public class MatchHistoryPoll implements Runnable {
 	private static final int FREQUENCY_IN_SECONDS = 300;
 
 	
+    /**
+     * Creates a new TaskExecutor 
+     * Submits new MatchHistoryConsumers at a fixed rate
+     */
+	
+	
+	
 	public void run() {
 		ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("MatchHistoryPoll"), new ThreadPoolExecutor.DiscardPolicy());
         task = taskExecutor.scheduleAtFixedRate(new MatchHistoryConsumer(2), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);

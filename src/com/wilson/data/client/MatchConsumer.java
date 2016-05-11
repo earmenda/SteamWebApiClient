@@ -1,118 +1,117 @@
 package com.wilson.data.client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
-import org.hibernate.exception.ConstraintViolationException;
 
 import com.wilson.data.client.PlayerConsumer.PlayerConsumerStatus;
-import com.wilson.data.client.dota.DotaGetMatchDetailsRequest;
-import com.wilson.data.client.dota.response.MatchDetailResponse;
 import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchDetailPlayer;
 
 public class MatchConsumer implements Runnable{
-	private Long matchId;
+	private List<MatchDetail> matchDetails;
 	
-	public MatchConsumer(Long matchId){
-		this.matchId = matchId;
+	public MatchConsumer(List<MatchDetail> matchDetails){
+		this.matchDetails = matchDetails;
 	}
 	
-
+    /**
+     * Creates a new TaskExecutor 
+     * Takes a list of matches
+     * Filters out matches against matchIdCache
+     * Persist the MatchDetail data in MatchResponse to the tables
+     */
+	
+	
 	public void run() {
-		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(2, 2, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchConsumer"));
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		SteamApi api = new SteamApi("029021F53D5F974DA73A60F9300C3CF5");
-
-
-		try{
-		if (MatchIdCache.getInstance().checkMatchId(this.matchId)){
-			throw new MatchAlreadyExistsException("Match: " + matchId + " already exists");
-			
-		}
-		DotaGetMatchDetailsRequest request = new DotaGetMatchDetailsRequest();
-		request.setMatchId(matchId + "");
-
-		MatchDetailResponse matchDetailResponse = (MatchDetailResponse) api
-				.execute(request);
-		MatchDetail matchResults = matchDetailResponse.getResult();
-		List <Future> futures = new ArrayList<Future>();
-		for (MatchDetailPlayer player : matchResults.getPlayers()){
-			try{
-			if (player.getSteamId() == null){
-				System.out.println("Match ID of null steamId: " + matchId);
-			}
-			}catch(Exception e){
-				e.printStackTrace();
-				throw e;
-			}
-			
-			String steamId = player.getSteamId() + "";
-
-
-
-			if(!PlayerIdCache.getInstance().checkPlayerId(steamId)){
-				futures.add(taskExecutor.submit(new PlayerConsumer(steamId, api)));
-				Thread.sleep(3000);
-				
-			}
-			
-		}
-		for (Future<PlayerConsumerStatus> future : futures){
-			PlayerConsumerStatus status = future.get();
-			if (!status.isSuccess()){
-				
-				throw new FailedToConsumePlayerExceptionForMatch("Could not consume SteamId: " + status.getSteamId() + " in MatchConsumer");
-			}
-		}
+		List<PlayerConsumerStatus> playerList = new ArrayList<PlayerConsumerStatus>();
+		Set<Long> matchBlackList = new HashSet<Long>();
+		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(1, 2, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchConsumer"));
 		
-		session.beginTransaction();
+		
+		try{
+			for (Iterator<MatchDetail> iterator = matchDetails.iterator(); iterator.hasNext();) {
+			    MatchDetail matchDetail = iterator.next();
+			    //Check if Match already exists, add to blacklist if it does
+			    if (MatchIdCache.getInstance().checkMatchId(matchDetail.getMatchId())) {
+			        matchBlackList.add(matchDetail.getMatchId());
+			    }
+			    else{
+			    	for(MatchDetailPlayer player : matchDetail.getPlayers()){
+						//Add players to be consumed in PlayerConsumer
+			    		playerList.add(new PlayerConsumerStatus(player.getSteamId(), matchDetail.getMatchId()));
+			    		
 
-		try {
-			session.save(matchResults);
-			session.getTransaction().commit();
-			MatchIdCache.getInstance().addMatchId(matchId);
-			System.out.println("MatchId = " + matchId);
-		} catch (ConstraintViolationException e) {
-			System.out.println("FAILED TO INSERT MATCH ID " +this.matchId);
-			e.printStackTrace(); 
+			    	}
+
+			    }
+			}
+			
+			
+			Future<List<PlayerConsumerStatus>> future = taskExecutor.submit(new PlayerConsumer(playerList));
+//			Thread.sleep(3000);     
+			
+		
+
+			List<PlayerConsumerStatus> statusList = future.get();
+
+			//If there are players that did not get pushed to db, do not consume match	
+			for(PlayerConsumerStatus status : statusList){
+				if (!status.isSuccess()){	
+					matchBlackList.add(status.getMatchId());
+			}
+			}
+	
+
+			for(MatchDetail detail : matchDetails ){
+				if(!matchBlackList.contains(detail.getMatchId())){
+					Session session = null;
+
+					try{
+						session =  HibernateUtil.getSessionFactory().openSession();
+						session.beginTransaction(); 
+						session.save(detail);       //commit MatchResult data to MatchDetail/MatchDetailPlayer tables
+						session.getTransaction().commit();
+						MatchIdCache.getInstance().addMatchId(detail.getMatchId());
+						System.out.println("Consumed MatchId = " + detail.getMatchId());
+					}
+					catch(Exception e){
+						e.printStackTrace(); 
+
+					}
+					finally{
+						if (session != null){
+						session.close();
+						}
+					}
+				}
+			}
+
+
+
+
+
+
 		}
 
-
-
-
-		}
-		catch(MatchAlreadyExistsException  | FailedToConsumePlayerExceptionForMatch e){
-			System.out.println(e.getMessage());
-		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
-			api.close();
-			session.close();
-			taskExecutor.shutdown();
+			taskExecutor.shutdown(); //Shutdown task
 
 		}
 	}
 	
-	private static class MatchAlreadyExistsException extends Exception{
-		public MatchAlreadyExistsException(String message){
-			super(message);
-			
-		}
-		
-	}
-	private static class FailedToConsumePlayerExceptionForMatch extends Exception{
-		public FailedToConsumePlayerExceptionForMatch(String message){
-			super(message);
-		}
-	}
+
 }
 

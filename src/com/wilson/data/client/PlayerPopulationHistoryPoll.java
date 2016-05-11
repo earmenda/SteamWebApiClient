@@ -23,13 +23,13 @@ import com.google.common.collect.Sets;
 import com.wilson.data.client.user.response.SteamPlayer;
 import com.wilson.data.persistence.HibernateUtil;
 
-public class PlayerPopulationPoll implements Runnable {
+public class PlayerPopulationHistoryPoll implements Runnable {
 
 	Set<String> playersToIgnore = Sets.newConcurrentHashSet();
 
 	private final static int DAYS_TIL_STALE = 1;
 
-	public PlayerPopulationPoll() {
+	public PlayerPopulationHistoryPoll() {
 
 	}
 

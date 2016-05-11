@@ -49,12 +49,12 @@ public class SteamApi {
 			builder.setScheme(apiProtocol).setHost(apiUrl);
 			builder.setPath(request.getSteamRoute() + request.getSteamMethod()
 					+ request.getSteamMethodVersion());
+			builder.setParameter("key", this.steamKey);
 
 			for (NameValuePair nvp : request.getSteamParameters()) {
 				builder.setParameter(nvp.getName(), nvp.getValue());
 			}
 
-			builder.setParameter("key", this.steamKey);
 			builder.setParameter("format", "json");
 			URI uri = builder.build();
 
@@ -69,6 +69,7 @@ public class SteamApi {
 			}
 			else{
 			response = EntityUtils.toString(entity);
+//			System.out.println("URL" + uri.toString() + "response: " + response);
 			ObjectMapper mapper = new ObjectMapper();
 //			MatchHistory MatchHistory = mapper.readValue(response, MatchHistory.class);
  			responseObject = mapper.readValue(response, responseType);

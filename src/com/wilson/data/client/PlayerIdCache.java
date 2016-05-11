@@ -11,6 +11,12 @@ import org.hibernate.transform.Transformers;
 import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.client.user.response.SteamPlayer;
 
+/**
+ * Singleton
+ * Queries for existing Steam Ids in DB
+ * Stores as a list
+ * Ability to add new steam Ids or check existing oens
+ */
 
 public class PlayerIdCache {
 	
@@ -28,6 +34,10 @@ public class PlayerIdCache {
  
 	
 	public synchronized boolean  checkPlayerId(String PlayerId){
+		return playerIdCache.contains(PlayerId);
+	}
+	
+	public synchronized boolean  checkPlayerIds(List PlayerId){
 		return playerIdCache.contains(PlayerId);
 	}
 	

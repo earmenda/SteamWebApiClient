@@ -11,6 +11,12 @@ import org.hibernate.transform.Transformers;
 import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 
+/**
+ * Singleton
+ * Queries for existing Matches in DB
+ * Stores as a list
+ * Ability to add new match Ids or check existing oens
+ */
 
 public class MatchIdCache {
 	
@@ -31,10 +37,12 @@ public class MatchIdCache {
 		return matchIdCache.contains(matchId);
 	}
 	
+	
 	public synchronized void addMatchId(Long matchId){
 		this.matchIdCache.add(matchId);
 	}
 
+	
 	
 	public synchronized void init() {
 		
