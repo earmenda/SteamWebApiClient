@@ -38,7 +38,7 @@ public class PlayerConsumer implements Callable {
 			// list of playerConsumerstatus
 
 		}
-
+		System.out.println("playerConsumer player list size (filtered):" + steamIds.size());
 		try {
 			SteamApi api = new SteamApi(SteamKeys.getSteamKey());
 			request = new SteamGetPlayerSummaryRequest();

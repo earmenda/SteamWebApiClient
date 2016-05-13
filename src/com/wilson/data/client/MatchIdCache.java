@@ -21,6 +21,7 @@ import com.wilson.data.shared.MatchDetail;
 public class MatchIdCache {
 	
 	private Set<Long> matchIdCache;
+	private Long workingSeqNumber;
 		
 	private static MatchIdCache matchCache = new MatchIdCache();
 
@@ -42,7 +43,12 @@ public class MatchIdCache {
 		this.matchIdCache.add(matchId);
 	}
 
-	
+	public synchronized void setWorkingSeqNumber(Long seqNumber){
+		this.workingSeqNumber = seqNumber;
+	}
+	public synchronized Long getWorkingSeqNumber(){
+		return this.workingSeqNumber;
+	}
 	
 	public synchronized void init() {
 		
@@ -67,6 +73,7 @@ public class MatchIdCache {
 //			HibernateUtil.shutdown();
 
 			System.out.println("Match ID Cache size:" + matchIdCache.size());
+			
 	}
 }
 }

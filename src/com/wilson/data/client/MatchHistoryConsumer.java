@@ -14,6 +14,7 @@ import com.wilson.data.client.dota.DotaGetMatchHistoryRequest;
 import com.wilson.data.client.dota.response.MatchHistoryResponse;
 import com.wilson.data.client.user.response.SteamPlayer;
 import com.wilson.data.persistence.HibernateUtil;
+import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchHistory;
 
 public class MatchHistoryConsumer implements Runnable {
@@ -55,13 +56,12 @@ public class MatchHistoryConsumer implements Runnable {
 	public void run(){
 
 		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryConsumer-MatchConsumer"));
-
+		List<MatchDetail> matchDetails;
 		try {
 //			while (true) {
 				try {
 					checkInterruptedStatus();  
 					DotaGetMatchHistoryRequest request = new DotaGetMatchHistoryRequest();
-					System.out.println(accountId); 
 					request.setAccountId(accountId);     //Set the account Id if this is for a player's history
 					MatchHistoryResponse matchHistoryResponse = (MatchHistoryResponse) api
 							.execute(request);
@@ -71,6 +71,11 @@ public class MatchHistoryConsumer implements Runnable {
 						if (!MatchIdCache.getInstance().checkMatchId( //Check if Match exists in the MatchIdCache
 								match.getMatchId())) {  
 
+					//make api call for each MatchHistory Match
+					//MatchHistory returns a maximum of 100 per player, set timeout for each?
+					//Add to List of MatchDetails
+					//Send to MatchConsumer
+							
 							futures.add(taskExecutor.submit(new MatchConsumer( //Consume matches 
 									match.getMatchId())));
 

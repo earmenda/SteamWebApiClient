@@ -17,6 +17,10 @@
     <mapping class="com.wilson.data.shared.MatchDetailAdditionalUnits" />
     <mapping class="com.wilson.data.shared.MatchDetailAbilityUpgrades" />
     <mapping class="com.wilson.dota.server.QueryModel"/>
+    <mapping class="com.wilson.data.shared.MatchHistoryBySequence" />
+    <mapping class="com.wilson.data.shared.MatchSeq" />
+    
+    
     
 </session-factory>
 

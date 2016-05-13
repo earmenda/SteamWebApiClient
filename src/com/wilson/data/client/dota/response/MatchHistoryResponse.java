@@ -4,6 +4,7 @@ import com.wilson.data.shared.MatchHistoryResults;
 
 public class MatchHistoryResponse {
 	private MatchHistoryResults result;
+
 	
 	public MatchHistoryResponse(){
 		

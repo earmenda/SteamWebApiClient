@@ -1,5 +1,6 @@
 package com.wilson.data.client;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import com.wilson.data.client.PlayerConsumer.PlayerConsumerStatus;
 import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchDetailPlayer;
+import com.wilson.data.shared.MatchSeq;
 
 public class MatchConsumer implements Runnable{
 	private List<MatchDetail> matchDetails;
@@ -56,7 +58,7 @@ public class MatchConsumer implements Runnable{
 			    }
 			}
 			
-			
+			System.out.println("player list size: " + playerList.size());
 			Future<List<PlayerConsumerStatus>> future = taskExecutor.submit(new PlayerConsumer(playerList));
 //			Thread.sleep(3000);     
 			
@@ -75,17 +77,28 @@ public class MatchConsumer implements Runnable{
 			for(MatchDetail detail : matchDetails ){
 				if(!matchBlackList.contains(detail.getMatchId())){
 					Session session = null;
-
+					
+					MatchSeq matchSequenceTracker = new MatchSeq();
+					matchSequenceTracker.setMatchId(detail.getMatchId());
+					matchSequenceTracker.setMatchSeqId(detail.getMatchSeqNum());
+					matchSequenceTracker.setTimeUpdated(new Timestamp(System.currentTimeMillis()));	
 					try{
 						session =  HibernateUtil.getSessionFactory().openSession();
+						
 						session.beginTransaction(); 
+						
 						session.save(detail);       //commit MatchResult data to MatchDetail/MatchDetailPlayer tables
+						session.save(matchSequenceTracker);
+						System.out.println("MatchSeq saved:" + matchSequenceTracker.getMatchId());
 						session.getTransaction().commit();
 						MatchIdCache.getInstance().addMatchId(detail.getMatchId());
 						System.out.println("Consumed MatchId = " + detail.getMatchId());
+						System.out.println("Corresponding MatchSeq: " + detail.getMatchSeqNum());
 					}
 					catch(Exception e){
 						e.printStackTrace(); 
+						System.out.println("did not consume: " + detail.getMatchId()+ "," +  matchSequenceTracker.getMatchSeqId());
+						session.close();
 
 					}
 					finally{

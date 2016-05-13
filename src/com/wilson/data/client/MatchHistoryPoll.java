@@ -9,7 +9,7 @@ public class MatchHistoryPoll implements Runnable {
 	
 	private Future task;
 	public MatchHistoryPoll(){};
-	private static final int FREQUENCY_IN_SECONDS = 300;
+	private static final int FREQUENCY_IN_SECONDS = 1;
 
 	
     /**
@@ -21,7 +21,7 @@ public class MatchHistoryPoll implements Runnable {
 	
 	public void run() {
 		ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("MatchHistoryPoll"), new ThreadPoolExecutor.DiscardPolicy());
-        task = taskExecutor.scheduleAtFixedRate(new MatchHistoryConsumer(2), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
+        task = taskExecutor.scheduleAtFixedRate(new MatchHistoryBySequencePoll(), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
 
 
 		

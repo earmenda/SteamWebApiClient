@@ -172,14 +172,15 @@ public class Main {
 //		}
 //		
 		
-
-		MatchHistoryPoll runner = new MatchHistoryPoll();
-		PlayerPopulationHistoryPoll playerRunner = new PlayerPopulationHistoryPoll();
-		Thread playerPopTest = new Thread(playerRunner);
 		
-		Thread matchTest = new Thread(runner);
+		//MatchHistoryPoll runner = new MatchHistoryPoll();
+		MatchHistoryPoll historyPoll = new MatchHistoryPoll();
+//		PlayerPopulationHistoryPoll playerRunner = new PlayerPopulationHistoryPoll();
+//		Thread playerPopTest = new Thread(playerRunner);
+		
+		Thread matchTest = new Thread(historyPoll);
 		matchTest.start();
-		playerPopTest.start();
+//		playerPopTest.start();
 
 
 
