@@ -58,7 +58,7 @@ public class MatchConsumer implements Runnable{
 			    }
 			}
 			
-			System.out.println("player list size: " + playerList.size());
+		//	System.out.println("player list size: " + playerList.size());
 			Future<List<PlayerConsumerStatus>> future = taskExecutor.submit(new PlayerConsumer(playerList));
 //			Thread.sleep(3000);     
 			
@@ -89,17 +89,16 @@ public class MatchConsumer implements Runnable{
 						
 						session.save(detail);       //commit MatchResult data to MatchDetail/MatchDetailPlayer tables
 						session.save(matchSequenceTracker);
-						System.out.println("MatchSeq saved:" + matchSequenceTracker.getMatchId());
+					//	System.out.println("MatchSeq saved:" + matchSequenceTracker.getMatchId());
 						session.getTransaction().commit();
 						MatchIdCache.getInstance().addMatchId(detail.getMatchId());
-						System.out.println("Consumed MatchId = " + detail.getMatchId());
-						System.out.println("Corresponding MatchSeq: " + detail.getMatchSeqNum());
+					//	System.out.println("Consumed MatchId = " + detail.getMatchId());
+					//	System.out.println("Corresponding MatchSeq: " + detail.getMatchSeqNum());
 					}
 					catch(Exception e){
 						e.printStackTrace(); 
-						System.out.println("did not consume: " + detail.getMatchId()+ "," +  matchSequenceTracker.getMatchSeqId());
-						session.close();
-
+				//		System.out.println("did not consume: " + detail.getMatchId()+ "," +  matchSequenceTracker.getMatchSeqId());
+						session.getTransaction().rollback();
 					}
 					finally{
 						if (session != null){

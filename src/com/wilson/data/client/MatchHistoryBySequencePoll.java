@@ -54,7 +54,7 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		//Grab latest sequence number from db
    
 		request.setSequenceNumber(String.valueOf(workingSequenceNumber)); //How does the app know when to start sequence?
-
+		
 		MatchHistoryBySequenceResponse matchHistorySequenceResponse = (MatchHistoryBySequenceResponse) api
 				.execute(request);
 		List<MatchDetail> matchResults = matchHistorySequenceResponse.getResult().getMatches();
@@ -64,14 +64,14 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		
 		MatchDetail lastMatch = matchResults.get(matchResults.size() - 1);
 		MatchIdCache.getInstance().setWorkingSeqNumber(lastMatch.getMatchSeqNum());
-		System.out.println("Last Match Seq Number:" + lastMatch.getMatchSeqNum());
+		System.out.println("First Match Seq Number: " +matchResults.get(0).getMatchSeqNum() + " Last Match Seq Number:" + lastMatch.getMatchSeqNum());
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
-//			Thread.sleep(60000);
+			taskExecutor.shutdown();
 		}
 		}
-//	}
+
 }

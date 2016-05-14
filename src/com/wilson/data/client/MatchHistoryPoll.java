@@ -8,8 +8,9 @@ import java.util.concurrent.TimeUnit;
 public class MatchHistoryPoll implements Runnable {
 	
 	private Future task;
+	private Future task1;
 	public MatchHistoryPoll(){};
-	private static final int FREQUENCY_IN_SECONDS = 1;
+	private static final int FREQUENCY_IN_SECONDS = 10;
 
 	
     /**
@@ -22,6 +23,7 @@ public class MatchHistoryPoll implements Runnable {
 	public void run() {
 		ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("MatchHistoryPoll"), new ThreadPoolExecutor.DiscardPolicy());
         task = taskExecutor.scheduleAtFixedRate(new MatchHistoryBySequencePoll(), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
+        task1 = taskExecutor.scheduleAtFixedRate(new MatchHistoryBySequenceTailPoll(), 0,   FREQUENCY_IN_SECONDS, TimeUnit.SECONDS);
 
 
 		

@@ -38,7 +38,7 @@ public class PlayerConsumer implements Callable {
 			// list of playerConsumerstatus
 
 		}
-		System.out.println("playerConsumer player list size (filtered):" + steamIds.size());
+//		System.out.println("playerConsumer player list size (filtered):" + steamIds.size());
 		try {
 			SteamApi api = new SteamApi(SteamKeys.getSteamKey());
 			request = new SteamGetPlayerSummaryRequest();
@@ -53,9 +53,9 @@ public class PlayerConsumer implements Callable {
 				try {
 					session = HibernateUtil.getSessionFactory().openSession();
 
-					System.out.println("PlayerSummary = "
-							+ player.getPersonaName() + " Player Steam ID: "
-							+ player.getSteamId());
+//					System.out.println("PlayerSummary = "
+//							+ player.getPersonaName() + " Player Steam ID: "
+//							+ player.getSteamId());
 					session.beginTransaction();
 					session.saveOrUpdate(player);
 					session.getTransaction().commit();
