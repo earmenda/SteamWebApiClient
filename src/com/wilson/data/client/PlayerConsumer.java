@@ -1,5 +1,6 @@
 package com.wilson.data.client;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,61 +29,119 @@ public class PlayerConsumer implements Callable {
 
 	public List<PlayerConsumerStatus> call() {
 		Set<String> steamIds = new HashSet<String>();
-
 		for (PlayerConsumerStatus status : playerConsumerStatusList) {
+
+			// System.out.println("player Consumer playerlist: " +
+			// status.getSteamId());
+
 			if (!PlayerIdCache.getInstance().checkPlayerId(status.getSteamId())) {
 
 				steamIds.add(status.getSteamId());
 			}
-
 			// list of playerConsumerstatus
 
 		}
-//		System.out.println("playerConsumer player list size (filtered):" + steamIds.size());
-		try {
-			SteamApi api = new SteamApi(SteamKeys.getSteamKey());
-			request = new SteamGetPlayerSummaryRequest();
-			request.setSteamIds(steamIds);
+		List<String> steamIdsList = new ArrayList<String>(steamIds);
+		System.out.println("playerConsumer player list size (filtered):"
+				+ steamIdsList.size());
+		if (!steamIdsList.isEmpty()) {
+			try {
+				List<String> apiSenderList = new ArrayList<String>();
+				apiSenderList.add(steamIdsList.get(0));
+				// Consume 100 steamIds at a time
 
-			SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
-					.execute(request);
+				for (int i = 1; i < steamIdsList.size(); i++) {
 
-			for (SteamPlayer player : playerSummaryResponse.getResponse()
-					.getPlayers()) {
-				Session session = null;
-				try {
-					session = HibernateUtil.getSessionFactory().openSession();
-
-//					System.out.println("PlayerSummary = "
-//							+ player.getPersonaName() + " Player Steam ID: "
-//							+ player.getSteamId());
-					session.beginTransaction();
-					session.saveOrUpdate(player);
-					session.getTransaction().commit();
-					PlayerIdCache.getInstance()
-							.addPlayerId(player.getSteamId());
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-
-					if (session != null) {
-						session.close();
+					if (i % 100 > 0) {
+						apiSenderList.add(steamIdsList.get(i));
 					}
 
+					else {
+						SteamApi api = new SteamApi(SteamKeys.getSteamKey());
+						request = new SteamGetPlayerSummaryRequest();
+						request.setSteamIds(apiSenderList);
+						SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
+								.execute(request);
+
+						for (SteamPlayer player : playerSummaryResponse
+								.getResponse().getPlayers()) {
+							Session session = null;
+							try {
+								session = HibernateUtil.getSessionFactory()
+										.openSession();
+
+								// System.out.println("PlayerSummary = "
+								// + player.getPersonaName() +
+								// " Player Steam ID: "
+								// + player.getSteamId());
+								session.beginTransaction();
+								session.saveOrUpdate(player);
+								session.getTransaction().commit();
+								PlayerIdCache.getInstance().addPlayerId(
+										player.getSteamId());
+
+
+							} catch (Exception e) {
+								e.printStackTrace();
+							} finally {
+
+								if (session != null) {
+									session.close();
+								}
+
+							}
+						}
+						apiSenderList.clear();
+						apiSenderList.add(steamIdsList.get(i));
+					}
 				}
+					SteamApi api = new SteamApi(SteamKeys.getSteamKey());
+					request = new SteamGetPlayerSummaryRequest();
+					request.setSteamIds(apiSenderList);
+					SteamPlayerSummary playerSummaryResponse = (SteamPlayerSummary) api
+							.execute(request);
+
+					for (SteamPlayer player : playerSummaryResponse
+							.getResponse().getPlayers()) {
+						Session session = null;
+						try {
+							session = HibernateUtil.getSessionFactory()
+									.openSession();
+
+							// System.out.println("PlayerSummary = "
+							// + player.getPersonaName() + " Player Steam ID: "
+							// + player.getSteamId());
+							session.beginTransaction();
+							session.saveOrUpdate(player);
+							session.getTransaction().commit();
+							PlayerIdCache.getInstance().addPlayerId(
+									player.getSteamId());
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+
+							if (session != null) {
+								session.close();
+							}
+						}
+					}
+
+				
+				for (PlayerConsumerStatus status : playerConsumerStatusList) {
+					status.setSuccess(PlayerIdCache.getInstance()
+							.checkPlayerId(status.getSteamId()));
+
+//					System.out.println("Steam id:  " + status.getSteamId() + "Status: " + PlayerIdCache.getInstance()
+//							.checkPlayerId(status.getSteamId()));
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
 			}
-
-			for (PlayerConsumerStatus status : playerConsumerStatusList) {
-				status.setSuccess(PlayerIdCache.getInstance().checkPlayerId(
-						status.getSteamId()));
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
 		}
 		return playerConsumerStatusList;
+
 	}
 
 	public static class PlayerConsumerStatus {

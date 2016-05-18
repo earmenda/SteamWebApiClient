@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.wilson.data.client.PlayerConsumer.PlayerConsumerStatus;
 import com.wilson.data.persistence.HibernateUtil;
@@ -37,6 +38,7 @@ public class MatchConsumer implements Runnable{
 	public void run() {
 		List<PlayerConsumerStatus> playerList = new ArrayList<PlayerConsumerStatus>();
 		Set<Long> matchBlackList = new HashSet<Long>();
+		
 		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(1, 2, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchConsumer"));
 		
 		
@@ -52,13 +54,14 @@ public class MatchConsumer implements Runnable{
 						//Add players to be consumed in PlayerConsumer
 			    		playerList.add(new PlayerConsumerStatus(player.getSteamId(), matchDetail.getMatchId()));
 			    		
-
+//			    		System.out.println("Match Consumer list of players in list of matches: " + player.getSteamId());
+			    		
 			    	}
 
 			    }
 			}
 			
-		//	System.out.println("player list size: " + playerList.size());
+			
 			Future<List<PlayerConsumerStatus>> future = taskExecutor.submit(new PlayerConsumer(playerList));
 //			Thread.sleep(3000);     
 			
@@ -72,7 +75,7 @@ public class MatchConsumer implements Runnable{
 					matchBlackList.add(status.getMatchId());
 			}
 			}
-	
+			
 
 			for(MatchDetail detail : matchDetails ){
 				if(!matchBlackList.contains(detail.getMatchId())){
@@ -86,7 +89,6 @@ public class MatchConsumer implements Runnable{
 						session =  HibernateUtil.getSessionFactory().openSession();
 						
 						session.beginTransaction(); 
-						
 						session.save(detail);       //commit MatchResult data to MatchDetail/MatchDetailPlayer tables
 						session.save(matchSequenceTracker);
 					//	System.out.println("MatchSeq saved:" + matchSequenceTracker.getMatchId());
@@ -95,10 +97,12 @@ public class MatchConsumer implements Runnable{
 					//	System.out.println("Consumed MatchId = " + detail.getMatchId());
 					//	System.out.println("Corresponding MatchSeq: " + detail.getMatchSeqNum());
 					}
-					catch(Exception e){
-						e.printStackTrace(); 
-				//		System.out.println("did not consume: " + detail.getMatchId()+ "," +  matchSequenceTracker.getMatchSeqId());
+					catch(ConstraintViolationException e){
+						System.out.println("did not consume: " + detail.getMatchId()+ "," +  matchSequenceTracker.getMatchSeqId());
 						session.getTransaction().rollback();
+					}
+					catch(Exception e){
+						e.printStackTrace();
 					}
 					finally{
 						if (session != null){

@@ -88,11 +88,12 @@ public class MatchHistoryBySequenceTailPoll implements Runnable {
 	    }
 	}
 			historicSequenceNumber -= 100;
-			System.out.println("historicSequenceNumber : " + historicSequenceNumber);
+			Thread.sleep(1000);
 			DotaGetMatchHistoryBySequenceRequest historicRequest = new DotaGetMatchHistoryBySequenceRequest();
 			historicRequest.setSequenceNumber(String.valueOf(historicSequenceNumber));
 			MatchHistoryBySequenceResponse matchHistorySequenceResponseScan = (MatchHistoryBySequenceResponse) api
 					.execute(historicRequest);
+			Thread.sleep(1000);
 			matchResults = matchHistorySequenceResponseScan.getResult().getMatches();
 		}
 		}catch(Exception e){

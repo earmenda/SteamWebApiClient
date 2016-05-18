@@ -42,7 +42,8 @@ public class SteamGetPlayerSummaryRequest extends SteamInterfaceRequest {
 		parameters.put("steamids", steamId);
 	}
 	public void setSteamIds(Collection<String> steamIds) {
-        parameters.put("steamids", StringUtils.join(steamIds, ","));
+        parameters.put("steamids", StringUtils.join(steamIds, " "));
+
     }
 	
 	public void setSteamParameters(Map<String,String> steamParameters){

@@ -53,12 +53,13 @@ public class SteamApi {
 
 			for (NameValuePair nvp : request.getSteamParameters()) {
 				builder.setParameter(nvp.getName(), nvp.getValue());
+
 			}
 
 			builder.setParameter("format", "json");
 			URI uri = builder.build();
-
-			//System.out.println(uri.toASCIIString());
+			
+//			System.out.println(uri.toASCIIString());
 			getRequest = new HttpGet(uri);
 			
 			entity = client.execute(getRequest).getEntity();

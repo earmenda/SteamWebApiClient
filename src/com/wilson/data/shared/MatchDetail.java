@@ -42,7 +42,6 @@ public class MatchDetail {
 	private int negativeVotes;
 	private int gameMode;
 	private int engine;
-	private String error;
 	private Boolean practiceMatch;
 
 	//Constructor
@@ -150,11 +149,7 @@ public class MatchDetail {
 	public int getEngine(){
 		return engine;
 	}
-	@Column(name = "error")
-	@JsonProperty("error")
-	public String getError(){
-		return error;
-	}
+
 	//Setter
 	public void setPlayers(List<MatchDetailPlayer> players){
 		this.players = players;
@@ -248,12 +243,6 @@ public class MatchDetail {
 		
 		
 	}
-	@JsonProperty("error")
-	public void setError(String error){
-		this.error = error;
 
-
-
-	}
 	
 }

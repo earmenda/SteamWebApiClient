@@ -58,7 +58,6 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		MatchHistoryBySequenceResponse matchHistorySequenceResponse = (MatchHistoryBySequenceResponse) api
 				.execute(request);
 		List<MatchDetail> matchResults = matchHistorySequenceResponse.getResult().getMatches();
-				
 		taskExecutor.submit(new MatchConsumer(matchResults));
 		
 		
