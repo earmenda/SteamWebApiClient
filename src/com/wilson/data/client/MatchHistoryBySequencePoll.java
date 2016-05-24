@@ -1,9 +1,10 @@
 package com.wilson.data.client;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -63,13 +64,17 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		
 		MatchDetail lastMatch = matchResults.get(matchResults.size() - 1);
 		MatchIdCache.getInstance().setWorkingSeqNumber(lastMatch.getMatchSeqNum());
-		System.out.println("First Match Seq Number: " +matchResults.get(0).getMatchSeqNum() + " Last Match Seq Number:" + lastMatch.getMatchSeqNum());
+		   DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		   //get current date time with Date()
+		   Date date = new Date();
+		   System.out.println(dateFormat.format(date) + ": First Match Seq Number: " +matchResults.get(0).getMatchSeqNum() + " Last Match Seq Number:" + lastMatch.getMatchSeqNum());
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 		finally{
 			taskExecutor.shutdown();
+			
 		}
 		}
 

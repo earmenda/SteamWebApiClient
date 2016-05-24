@@ -10,7 +10,7 @@ public class MatchHistoryPoll implements Runnable {
 	private Future task;
 	private Future task1;
 	public MatchHistoryPoll(){};
-	private static final int FREQUENCY_IN_SECONDS = 3;
+	private static final int FREQUENCY_IN_SECONDS = Config.HISTORYTHREADTIMEOUT;
 
 	
     /**
