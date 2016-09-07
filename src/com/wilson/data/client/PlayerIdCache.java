@@ -13,9 +13,8 @@ import com.wilson.data.client.user.response.SteamPlayer;
 
 /**
  * Singleton
- * Queries for existing Steam Ids in DB
- * Stores as a list
- * Ability to add new steam Ids or check existing oens
+ * Queries for existing Steam Ids in DB and stores as a list
+ * 
  */
 
 public class PlayerIdCache {

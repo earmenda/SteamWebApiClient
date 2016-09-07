@@ -33,6 +33,11 @@ public class PlayerPopulationHistoryPoll implements Runnable {
 
 	}
 
+
+    /**
+     * Deprecated in favor of using MatchHistoryBySequence
+     */
+	
 	public void run(){
 		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(2	, 2, 0L, TimeUnit.MILLISECONDS, new SynchronousQueue<Runnable>(), new CustomThreadFactory("PopulationPlayerPoll"));
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -43,7 +48,6 @@ public class PlayerPopulationHistoryPoll implements Runnable {
 			
 			
 			while(true){
-				
 				try{
 				Criteria criteria = session.createCriteria(SteamPlayer.class);
 				criteria.setProjection(Projections.projectionList().add(Projections.property("steamId"),"steamId"));
@@ -68,14 +72,10 @@ public class PlayerPopulationHistoryPoll implements Runnable {
 	
 					MatchHistoryConsumer mH1 = new MatchHistoryConsumer(2);
 					mH1.setSteamId(steamPlayer.getSteamId());
-	//				taskExecutor.submit(mH1);
 					CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(mH1, taskExecutor);
 					playersToIgnore.add(steamPlayer.getSteamId());
 					System.out.println("SUBMITTED MATCH HISTORY CONSUMER FOR PLAYER " +steamPlayer.getSteamId());
-	//				completableFuture.thenApplyAsync((test) -> {
-	//					System.out.println("SHIT SHIT SHIT SHIT " +test);
-	//					return null;
-	//				});
+
 					completableFuture.thenRunAsync(() -> {
 						System.out.println("SHIT SHIT SHIT SHIT" +steamPlayer.getSteamId());
 						playersToIgnore.remove(steamPlayer.getSteamId());
@@ -95,36 +95,14 @@ public class PlayerPopulationHistoryPoll implements Runnable {
 				
 			
 			}
-//			global variable synchoronzied working list singelton cache
-//			
-//			while loop()
-//			criteria list is the query :[1,2,3] [45] [67]
-//				(check if creiteria list is in working list, then pass remainder to working list)
-//					working list is things we need to put into task execttor : [1,2,3]  [1,2]
-//							for each in working list
-//							task execute, (picked up) remove current item from working list -> updates the last_updated
-//							if exception or something, add item back into list
-//							loop around
-//						
-					
-			//can't pick up bot / 0
-			//can't pick up things currently worked on
-//			Thread.sleep(30000);
+
 			}
 			catch(Exception e){
 				e.printStackTrace();
 			}
 		
 			
-//			HibernateUtil.shutdown();
-//			pull first five items from cache
-//			find all players
-//			get player history
-//			store each match using match consumer
-//			move down player list
-//			get player history
-		// store each match using match consumer
-		// }
+
 
 	}
 }

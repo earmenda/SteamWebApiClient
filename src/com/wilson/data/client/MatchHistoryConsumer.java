@@ -17,6 +17,11 @@ import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchHistory;
 
+/**
+ * @deprecated Obsolete - Removed in favor of using MatchHistoryBySequence workflow 
+ * Retrieves Match histories for each player and sends to Match consumer
+ */
+
 public class MatchHistoryConsumer implements Runnable {
 	private String accountId;
 	private Future task;
@@ -46,20 +51,14 @@ public class MatchHistoryConsumer implements Runnable {
 	}
 	
 	
-    /**
-     * Creates a new TaskExecutor 
-     * Sends a Match History request with optional accountId (option currently exercised by PlayerPopulationPoll)
-     * If Match is not in MatchIdCache, submit new Match Consumer for each Match in MatchHistory
-     * If accountId (steamId) was set, update the lastUpdated column in playerSummary
-     */
+
 	
 	public void run(){
-
 		ThreadPoolExecutor taskExecutor = new ThreadPoolExecutor(threadCount, threadCount, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), new CustomThreadFactory("MatchHistoryConsumer-MatchConsumer"));
 		List<MatchDetail> matchDetails;
 		try {
-//			while (true) {
 				try {
+
 					checkInterruptedStatus();  
 					DotaGetMatchHistoryRequest request = new DotaGetMatchHistoryRequest();
 					request.setAccountId(accountId);     //Set the account Id if this is for a player's history
@@ -71,13 +70,10 @@ public class MatchHistoryConsumer implements Runnable {
 						if (!MatchIdCache.getInstance().checkMatchId( //Check if Match exists in the MatchIdCache
 								match.getMatchId())) {  
 
-					//make api call for each MatchHistory Match
-					//MatchHistory returns a maximum of 100 per player, set timeout for each?
-					//Add to List of MatchDetails
-					//Send to MatchConsumer
-							
-							futures.add(taskExecutor.submit(new MatchConsumer( //Consume matches 
-									match.getMatchId())));
+
+//Re-did Match consumer (now takes a list). This line no longer works
+//							futures.add(taskExecutor.submit(new MatchConsumer( //Consume matches 
+//									match.getMatchId())));
 
 						}
 
@@ -90,7 +86,6 @@ public class MatchHistoryConsumer implements Runnable {
 					
 					if(accountId != null){       //If accountId (steamId) was set, we need to set the lastUpdated timestamp in the db for the player
 						Session session = HibernateUtil.getSessionFactory().openSession();
-//						SteamPlayer mergeUser = new SteamPlayer();
 						SteamPlayer mergeUser = session.load(SteamPlayer.class, (Long.parseLong(accountId) + 76561197960265728L + ""));
 						mergeUser.setLastUpdated(new Timestamp(System.currentTimeMillis()));
 						session.beginTransaction();

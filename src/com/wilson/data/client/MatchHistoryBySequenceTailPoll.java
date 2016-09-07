@@ -18,6 +18,10 @@ import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchSeq;
 
+/**
+ * Polls 100 dota matches at a time by the SeqNum in Steam API
+ */
+
 public class MatchHistoryBySequenceTailPoll implements Runnable {
 
 	public MatchHistoryBySequenceTailPoll(){
@@ -37,15 +41,13 @@ public class MatchHistoryBySequenceTailPoll implements Runnable {
 					.createSQLQuery("select * from match_seq where time_updated is not null order by time_updated desc limit 1;")
 					.addEntity(MatchSeq.class);
 			List matchSeqQueryResult = matchSeqQuery.list();
-//			MatchSeq matchSequence = (MatchSeq) matchSeqQueryResult.get(0);
-//			workingSequenceNumber = matchSequence.getMatchSeqId();
 	   for (Iterator iterator = 
 					   matchSeqQueryResult.iterator(); iterator.hasNext();){
 	    MatchSeq matchSequence = (MatchSeq) iterator.next(); 
 	    System.out.print("Match Sequence : " + matchSequence.getMatchSeqId()); 
 	    workingSequenceNumber = matchSequence.getMatchSeqId();
 	 }
-//			
+			
 		}
 		else{
 			workingSequenceNumber = MatchIdCache.getInstance().getWorkingSeqNumber();
@@ -88,12 +90,12 @@ public class MatchHistoryBySequenceTailPoll implements Runnable {
 	    }
 	}
 			historicSequenceNumber -= 100;
-			Thread.sleep(1000);
+			//Thread.sleep(1000);
 			DotaGetMatchHistoryBySequenceRequest historicRequest = new DotaGetMatchHistoryBySequenceRequest();
 			historicRequest.setSequenceNumber(String.valueOf(historicSequenceNumber));
 			MatchHistoryBySequenceResponse matchHistorySequenceResponseScan = (MatchHistoryBySequenceResponse) api
 					.execute(historicRequest);
-			Thread.sleep(1000);
+			//Thread.sleep(1000);
 			matchResults = matchHistorySequenceResponseScan.getResult().getMatches();
 		}
 		}catch(Exception e){

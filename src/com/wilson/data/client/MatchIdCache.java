@@ -13,9 +13,8 @@ import com.wilson.data.shared.MatchDetail;
 
 /**
  * Singleton
- * Queries for existing Matches in DB
- * Stores as a list
- * Ability to add new match Ids or check existing oens
+ * Queries for all existing Matches in DB and stores as a list
+ * 
  */
 
 public class MatchIdCache {
@@ -54,8 +53,8 @@ public class MatchIdCache {
 	public synchronized void init() {
 		
 		if (matchIdCache == null) {
+			System.out.println("Filling the Match ID cache...");
 			matchIdCache = new HashSet<Long>();
-//			Session session = HibernateUtil.getSessionFactory().openSession();
 			Session session = Main.session.getSessionFactory().openSession();
 			List <MatchDetail> matchDetails= (List <MatchDetail>)session.createCriteria(MatchDetail.class)
 					.setProjection(
@@ -71,7 +70,6 @@ public class MatchIdCache {
 			}
 
 			session.close();
-//			HibernateUtil.shutdown();
 
 			System.out.println("Match ID Cache size:" + matchIdCache.size());
 			

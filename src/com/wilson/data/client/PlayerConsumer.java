@@ -13,15 +13,14 @@ import com.wilson.data.client.user.response.SteamPlayer;
 import com.wilson.data.client.user.response.SteamPlayerSummary;
 import com.wilson.data.persistence.HibernateUtil;
 
+/**
+ * Filters based on existing players in cache and persists remaining data
+ */
+
 public class PlayerConsumer implements Callable {
 	SteamApi api;
 	List<PlayerConsumerStatus> playerConsumerStatusList;
 	SteamGetPlayerSummaryRequest request;
-
-	// public PlayerConsumer(String steamId, SteamApi api){
-	// this.steamId = steamId;
-	// this.api = api;
-	// }
 
 	public PlayerConsumer(List<PlayerConsumerStatus> playerConsumerStatusList) {
 		this.playerConsumerStatusList = playerConsumerStatusList;
@@ -31,14 +30,11 @@ public class PlayerConsumer implements Callable {
 		Set<String> steamIds = new HashSet<String>();
 		for (PlayerConsumerStatus status : playerConsumerStatusList) {
 
-			// System.out.println("player Consumer playerlist: " +
-			// status.getSteamId());
 
 			if (!PlayerIdCache.getInstance().checkPlayerId(status.getSteamId())) {
 
 				steamIds.add(status.getSteamId());
 			}
-			// list of playerConsumerstatus
 
 		}
 		List<String> steamIdsList = new ArrayList<String>(steamIds);
@@ -70,10 +66,6 @@ public class PlayerConsumer implements Callable {
 								session = HibernateUtil.getSessionFactory()
 										.openSession();
 
-								// System.out.println("PlayerSummary = "
-								// + player.getPersonaName() +
-								// " Player Steam ID: "
-								// + player.getSteamId());
 								session.beginTransaction();
 								session.saveOrUpdate(player);
 								session.getTransaction().commit();
@@ -108,9 +100,6 @@ public class PlayerConsumer implements Callable {
 							session = HibernateUtil.getSessionFactory()
 									.openSession();
 
-							// System.out.println("PlayerSummary = "
-							// + player.getPersonaName() + " Player Steam ID: "
-							// + player.getSteamId());
 							session.beginTransaction();
 							session.saveOrUpdate(player);
 							session.getTransaction().commit();
@@ -131,8 +120,6 @@ public class PlayerConsumer implements Callable {
 					status.setSuccess(PlayerIdCache.getInstance()
 							.checkPlayerId(status.getSteamId()));
 
-//					System.out.println("Steam id:  " + status.getSteamId() + "Status: " + PlayerIdCache.getInstance()
-//							.checkPlayerId(status.getSteamId()));
 
 				}
 			} catch (Exception e) {

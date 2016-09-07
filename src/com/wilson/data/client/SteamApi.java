@@ -65,7 +65,7 @@ public class SteamApi {
 			entity = client.execute(getRequest).getEntity();
 			
 			//check if entity is null
-			if (entity == null){
+			if (entity == null ){
 				System.out.println("Entity null");
 			}
 			else{

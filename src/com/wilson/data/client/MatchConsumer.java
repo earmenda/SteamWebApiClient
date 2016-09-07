@@ -20,6 +20,10 @@ import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchDetailPlayer;
 import com.wilson.data.shared.MatchSeq;
 
+/**
+ * Takes in a list of MatchDetails and persists contents to DB
+ */
+
 public class MatchConsumer implements Runnable{
 	private List<MatchDetail> matchDetails;
 	
@@ -27,12 +31,7 @@ public class MatchConsumer implements Runnable{
 		this.matchDetails = matchDetails;
 	}
 	
-    /**
-     * Creates a new TaskExecutor 
-     * Takes a list of matches
-     * Filters out matches against matchIdCache
-     * Persist the MatchDetail data in MatchResponse to the tables
-     */
+
 	
 	
 	public void run() {
@@ -63,7 +62,6 @@ public class MatchConsumer implements Runnable{
 			
 			
 			Future<List<PlayerConsumerStatus>> future = taskExecutor.submit(new PlayerConsumer(playerList));
-//			Thread.sleep(3000);     
 			
 		
 

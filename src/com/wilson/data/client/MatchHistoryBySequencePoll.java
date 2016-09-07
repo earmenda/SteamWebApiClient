@@ -18,6 +18,10 @@ import com.wilson.data.persistence.HibernateUtil;
 import com.wilson.data.shared.MatchDetail;
 import com.wilson.data.shared.MatchSeq;
 
+/**
+ * Polls 100 dota matches at a time by the SeqNum in Steam API
+ */
+
 public class MatchHistoryBySequencePoll implements Runnable{
 
 	
@@ -28,7 +32,6 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		Long workingSequenceNumber = (long) 0;
 
 		
-//		while(true){
 		try{
 			
 		
@@ -58,10 +61,10 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		
 		MatchHistoryBySequenceResponse matchHistorySequenceResponse = (MatchHistoryBySequenceResponse) api
 				.execute(request);
+		if(matchHistorySequenceResponse.getResult() != null){
+			
 		List<MatchDetail> matchResults = matchHistorySequenceResponse.getResult().getMatches();
 		taskExecutor.submit(new MatchConsumer(matchResults));
-		
-		
 		MatchDetail lastMatch = matchResults.get(matchResults.size() - 1);
 		MatchIdCache.getInstance().setWorkingSeqNumber(lastMatch.getMatchSeqNum());
 		   DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -69,6 +72,13 @@ public class MatchHistoryBySequencePoll implements Runnable{
 		   Date date = new Date();
 		   System.out.println(dateFormat.format(date) + ": First Match Seq Number: " +matchResults.get(0).getMatchSeqNum() + " Last Match Seq Number:" + lastMatch.getMatchSeqNum());
 		}
+		else{
+		   DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		    Date date = new Date();
+			System.out.println(dateFormat.format(date) + ": Empty Response");
+		}
+		}
+		
 		catch(Exception e){
 			e.printStackTrace();
 		}
